@@ -155,7 +155,7 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Sixth navbar example">
       <div class="container-fluid">
-        <a class="navbar-brand ps-3">AEPS - Zonificacion</a>
+        <a class="navbar-brand ps-3">AEPS - Zonificación</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample06"
           aria-controls="navbarsExample06" aria-expanded="true" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -255,8 +255,6 @@
     </svg>
   </button>
 
-
-
   <!-- Scripts Boostrap  -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -334,29 +332,13 @@
       ext: 'png'
     });
 
-    //  Terreno
-
     var satelite = L.layerGroup([Esri_WorldImagery, Stamen_TonerLabels])
+
     var mapasBase = {
       "Default": Stadia_AlidadeSmooth,
       "Street": OpenStreetMap_Mapnik,
       'Satelite': Esri_WorldImagery,
     }
-
-    var layerControl = L.control.layers(mapasBase, {}).addTo(map)
-
-    map.on('click', function (e) {
-      document.getElementById("longitud").value = e.latlng.lng
-      document.getElementById("latitud").value = e.latlng.lat
-      consulta()
-    });
-
-    map.on('locationfound', function (e) {
-      document.getElementById("longitud").value = e.latlng.lng
-      document.getElementById("latitud").value = e.latlng.lat
-      consulta()
-      lc.stop()
-    });
 
     function getColor(d) {
       return d == 'Samacá' ? "#40ff00" :
@@ -375,8 +357,10 @@
         d == 7 ? "#E6FF00" :
         d == 8 ? "#eee01b" :
         d == 9 ? "#FFDE59" :
-                 "#FFE0B3"
+                "#FFE0B3"
     }
+
+    //   Geojson Clusters
 
     var capCluster = L.geoJSON(clusters, {
       style: function (feature) {
@@ -387,6 +371,21 @@
         }
       }
     })
+
+    var legendClusters = L.control({ position: 'bottomleft' });
+
+    legendClusters.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'info legend'),
+        labels = ['Cluster 1', 'Cluster 2', 'Cluster 3', 'Cluster 4', 'Cluster 5', 'Cluster 6', 'Cluster 7', 'Cluster 8', 'Cluster 9', 'Cluster 10'];
+      for (var i = 0; i < labels.length; i++) {
+        div.innerHTML +=
+          '<i style="background:' + getColor(i + 1) + '"></i> ' +
+          labels[i] + '<br>';
+      }
+      return div;
+    };
+
+    //   Geojson Municipios
 
     var capMunicipios = L.geoJSON(municipios, {
       style: function (feature) {
@@ -411,21 +410,27 @@
     };
 
     legendMunicipios.addTo(map)
-    var legendClusters = L.control({ position: 'bottomleft' });
 
-    legendClusters.onAdd = function (map) {
-      var div = L.DomUtil.create('div', 'info legend'),
-        labels = ['Cluster 1', 'Cluster 2', 'Cluster 3', 'Cluster 4', 'Cluster 5', 'Cluster 6', 'Cluster 7', 'Cluster 8', 'Cluster 9', 'Cluster 10'];
-      for (var i = 0; i < labels.length; i++) {
-        div.innerHTML +=
-          '<i style="background:' + getColor(i + 1) + '"></i> ' +
-          labels[i] + '<br>';
-      }
-      return div;
-    };
+    var overLay = {
+      "Municipios": capMunicipios,
+      "Clusters": capCluster
+    }
     
-    layerControl.addOverlay(capMunicipios, "Municipios");
-    layerControl.addOverlay(capCluster, "Clusters");
+    var layerControl = L.control.layers(mapasBase, overLay).addTo(map)
+
+    // Funciones del mapa
+    map.on('click', function (e) {
+      document.getElementById("longitud").value = e.latlng.lng
+      document.getElementById("latitud").value = e.latlng.lat
+      consulta()
+    });
+
+    map.on('locationfound', function (e) {
+      document.getElementById("longitud").value = e.latlng.lng
+      document.getElementById("latitud").value = e.latlng.lat
+      consulta()
+      lc.stop()
+    });
 
     map.on('overlayadd', function (eventLayer) {
       if (eventLayer.name === 'Municipios') {
@@ -454,6 +459,8 @@
       toast.show()
       btnSave.setAttribute("style", "display: none;");
     });
+
+    // buscar ubicacion con gps
 
     var lc = L.control.locate({
       strings: {
@@ -785,13 +792,11 @@
       let lines = doc.splitTextToSize("Este resultado es una aproximación a las características de sus suelos, basado en análisis de información, a partir de una malla rígida, capturada por los profesionales del proyecto. No reemplaza un análisis de suelo convencional, pero le servirá de guía para la toma de decisiones.", docWidth - 20);
       doc.text(lines, 10, currentHeight);
 
-
       //   Datos
 
       currentHeight += pdfConfig.subLineHeight * 4;
 
       const categorias = infodatos.categorias;
-
       for (const categoria in categorias) {
 
         if (currentHeight + 35 > docHeight - 20) {
