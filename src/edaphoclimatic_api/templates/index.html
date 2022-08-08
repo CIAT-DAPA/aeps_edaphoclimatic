@@ -38,8 +38,6 @@
 
     gtag('config', 'G-FC8BZ4G6BS');
   </script> -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.10/umd.js" referrerpolicy="no-referrer"></script>
   <!--     Geojson     -->
   <script src="static/js/municipios_estudio.js"></script>
   <script src="static/js/veredas_municipios_estudio.js"></script>
@@ -147,7 +145,7 @@
     }
   </style>
 
-  <title>AEPS - Zonificación</title>
+  <title>AEPS - Zonificacion</title>
 </head>
 
 <body>
@@ -157,7 +155,7 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Sixth navbar example">
       <div class="container-fluid">
-        <a class="navbar-brand ps-3">AEPS - Zonificación</a>
+        <a class="navbar-brand ps-3">AEPS - Zonificacion</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample06"
           aria-controls="navbarsExample06" aria-expanded="true" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -304,11 +302,7 @@
         11);
     var marker = L.marker([0.0, 0.0])
 
-    var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmljdG9yOTkzIiwiYSI6ImNsM2l5bG5zZjE1enAzY21yaHQ3eHp0d2IifQ.9svrumoxUySacey5r07Wuw', {
-      attribution: 'Map data &copy; <a href="https://www.mapbox.com/">Mapbox Light</a> contributors',
-      minZoom: 8,
-    });
-
+    //    Mapas base
     //    Street
 
     var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -322,7 +316,7 @@
     var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
       maxZoom: 20,
       minZoom: 8,
-      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     //  Satelital
@@ -336,25 +330,20 @@
     var Stamen_TonerLabels = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.{ext}', {
       attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       subdomains: 'abcd',
-      maxZoom: 20,
+      maxZoom: 17,
       ext: 'png'
     });
 
     //  Terreno
 
-    var Jawg_Terrain = L.tileLayer('https://{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
-      attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      minZoom: 0,
-      maxZoom: 22,
-      subdomains: 'abcd',
-      accessToken: 'MisUUnknR3xb193VpKsIXBjvwh2eeVvSPEYoZ5rC5id9NTLczrAZj5Z2MbeXrUYg'
-    });
-
-    map.addControl(new L.Control.Layers({
+    var satelite = L.layerGroup([Esri_WorldImagery, Stamen_TonerLabels])
+    var mapasBase = {
       "Default": Stadia_AlidadeSmooth,
       "Street": OpenStreetMap_Mapnik,
       'Satelite': Esri_WorldImagery,
-    }, {}));
+    }
+
+    var layerControl = L.control.layers(mapasBase, {}).addTo(map)
 
     map.on('click', function (e) {
       document.getElementById("longitud").value = e.latlng.lng
@@ -363,7 +352,6 @@
     });
 
     map.on('locationfound', function (e) {
-      console.log("a ver mani manito esto sale de aqui")
       document.getElementById("longitud").value = e.latlng.lng
       document.getElementById("latitud").value = e.latlng.lat
       consulta()
@@ -373,42 +361,87 @@
     function getColor(d) {
       return d == 'Samacá' ? "#40ff00" :
         d == 'Ventaquemada' ? "#eee01b" :
-          d == 'Motavita' ? "#ff9900" :
-            d == 'Siachoque' ? "#ff00dd" :
-              d == 'Soracá' ? "#ff0000" :
-                d == 'Toca' ? "#0048ff" :
-                  "#24c2af";
+        d == 'Siachoque' ? "#ff00dd" :
+        d == 'Motavita' ? "#ff9900" :
+        d == 'Soracá' ? "#ff0000" :
+        d == 'Tunja' ? "#24c2af" :
+        d == 'Toca' ? "#0048ff" :
+        d == 1 ? "#4C00FF" :
+        d == 2 ? "#0019FF" :
+        d == 3 ? "#0080FF" :
+        d == 4 ? "#00E5FF" :
+        d == 5 ? "#00FF4D" :
+        d == 6 ? "#4DFF00" :
+        d == 7 ? "#E6FF00" :
+        d == 8 ? "#eee01b" :
+        d == 9 ? "#FFDE59" :
+                 "#FFE0B3"
     }
 
-    var capCluster = L.geoJSON(cluster).addTo(map)
+    var capCluster = L.geoJSON(clusters, {
+      style: function (feature) {
+        return {
+          color: getColor(feature.properties.Cluster),
+          weight: 1,
+          fillOpacity: 0.5
+        }
+      }
+    })
 
     var capMunicipios = L.geoJSON(municipios, {
       style: function (feature) {
         return {
           color: getColor(feature.properties.municipios),
-          weight: 1
+          weight: 1,
         }
       }
     }).addTo(map)
 
-    var legend = L.control({ position: 'bottomleft' });
+    var legendMunicipios = L.control({ position: 'bottomleft' });
 
-    legend.onAdd = function (map) {
-
+    legendMunicipios.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'info legend'),
         labels = ['Samacá', 'Ventaquemada', 'Motavita', 'Siachoque', 'Soracá', 'Toca', 'Tunja'];
-
-      // loop through our density intervals and generate a label with a colored square for each interval
       for (var i = 0; i < labels.length; i++) {
         div.innerHTML +=
           '<i style="background:' + getColor(labels[i]) + '"></i> ' +
           labels[i] + '<br>';
       }
-
       return div;
     };
 
-    legend.addTo(map);
+    legendMunicipios.addTo(map)
+    var legendClusters = L.control({ position: 'bottomleft' });
+
+    legendClusters.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'info legend'),
+        labels = ['Cluster 1', 'Cluster 2', 'Cluster 3', 'Cluster 4', 'Cluster 5', 'Cluster 6', 'Cluster 7', 'Cluster 8', 'Cluster 9', 'Cluster 10'];
+      for (var i = 0; i < labels.length; i++) {
+        div.innerHTML +=
+          '<i style="background:' + getColor(i + 1) + '"></i> ' +
+          labels[i] + '<br>';
+      }
+      return div;
+    };
+    
+    layerControl.addOverlay(capMunicipios, "Municipios");
+    layerControl.addOverlay(capCluster, "Clusters");
+
+    map.on('overlayadd', function (eventLayer) {
+      if (eventLayer.name === 'Municipios') {
+        map.addControl(legendMunicipios);
+      } else {
+        map.addControl(legendClusters);
+      }
+    })
+
+    map.on('overlayremove', function (eventLayer) {
+      if (eventLayer.name === 'Municipios') {
+        map.removeControl(legendMunicipios);
+      } else {
+        map.removeControl(legendClusters);
+      }
+    })
 
     map.on('locationerror', function (e) {
       console.log(e);
@@ -594,7 +627,7 @@
         yaxis: {
           labels: {
             formatter: function (val, index) {
-              return val.toFixed(3);
+              return val.toFixed(2);
             }
           },
         }
@@ -699,7 +732,7 @@
 
       //      Encabezado
 
-      doc.addImage("./static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+      doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
 
       currentHeight += pdfConfig.subLineHeight;
       currentHeight += pdfConfig.subLineHeight;
@@ -752,6 +785,7 @@
       let lines = doc.splitTextToSize("Este resultado es una aproximación a las características de sus suelos, basado en análisis de información, a partir de una malla rígida, capturada por los profesionales del proyecto. No reemplaza un análisis de suelo convencional, pero le servirá de guía para la toma de decisiones.", docWidth - 20);
       doc.text(lines, 10, currentHeight);
 
+
       //   Datos
 
       currentHeight += pdfConfig.subLineHeight * 4;
@@ -762,7 +796,7 @@
 
         if (currentHeight + 35 > docHeight - 20) {
           doc.addPage()
-          doc.addImage("./static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+          doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
           doc.line(10, 39, docWidth - 10, 39);
           currentHeight = 51
         }
@@ -779,7 +813,7 @@
 
           if (currentHeight + 30 > docHeight - 20) {
             doc.addPage()
-            doc.addImage("./static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+            doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
             doc.line(10, 39, docWidth - 10, 39);
             currentHeight = 51
           }
