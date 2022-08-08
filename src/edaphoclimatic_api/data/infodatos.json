@@ -1,0 +1,210 @@
+{
+  "ACIDEZ_INT":{
+    "nombre":"Acidez intercambiable",
+    "unidad": "cmol/kg",
+    "descripcion": "",
+    "sigla": ""
+  },
+  "Aluminio":{
+    "nombre":"Aluminio intercambiable",
+    "unidad": "cmol/kg",
+    "descripcion": "La saturacion de aluminio se relaciona directamente con la acidez del suelo",
+    "sigla": "Al"
+  },
+  "ARCILLAS":{
+    "nombre":"Arcillas",
+    "unidad": "%",
+    "descripcion": "Porcentaje de arcillas en el suelo",
+    "sigla": ""
+  },
+  "ARENAS":{
+    "nombre":"Arenas ",
+    "unidad": "%",
+    "descripcion": "Porcentaje de arenas en el suelo",
+    "sigla": ""
+  },
+  "B":{
+    "nombre":"Boro",
+    "unidad": "ppm",
+    "descripcion": "Boro presente en el suelo",
+    "sigla": "B"
+  },
+  "C.O.":{
+    "nombre":"Carbono orgánico",
+    "unidad": "%",
+    "descripcion": "Carbono solido almacenado en el suelo",
+    "sigla": "C.O."
+  },
+  "Ca":{
+    "nombre":"Calcio",
+    "unidad": "cmol/kg",
+    "descripcion": "Calcio presente en el suelo",
+    "sigla": "Ca"
+  },
+  "CE":{
+    "nombre":"Conductividad eléctrica",
+    "unidad": "dS/m",
+    "descripcion": "Se relaciona directamente con la cantidad de sales disueltas en el suelo",
+    "sigla": "CE"
+  },
+  "CIC":{
+    "nombre":"Capacidad de Intercambio Catiónico",
+    "unidad": "cmol/kg",
+    "descripcion": "Representa la cantidad de cationes que los minerales del suelo pueden retener",
+    "sigla": "CIC"
+  },
+  "CICe":{
+    "nombre":"Capacidad de Intercambio Catiónico Efectiva",
+    "unidad": "cmol/kg",
+    "descripcion": "",
+    "sigla": "CICe"
+  },
+  "CICr":{
+    "nombre":"Capacidad de Intercambio Catiónico Real",
+    "unidad": "cmol/kg",
+    "descripcion": "",
+    "sigla": "CICr"
+  },
+  "Cu":{
+    "nombre":"Cobre",
+    "unidad": "ppm",
+    "descripcion": "Cobre presente en el suelo",
+    "sigla": "Cu"
+  },
+  "F_MO":{
+    "nombre":"Materia orgánica",
+    "unidad": "%",
+    "descripcion": "Materia conformada por compuestos organicos provenientes de organismos vivos",
+    "sigla": ""
+  },
+  "Fe":{
+    "nombre":"Hierro",
+    "unidad": "ppm",
+    "descripcion": "Hierro presente en el suelo",
+    "sigla": "Fe"
+  },
+  "FERTILIDAD":{
+    "nombre":"Indice de fertilidad del suelo (a 30 cm)",
+    "unidad": "",
+    "descripcion": "Indice de fertilidad química del suelo (Adaptado a 30 cm, metodologia IGAC)",
+    "sigla": ""
+  },
+  "K":{
+    "nombre":"Potasio",
+    "unidad": "cmol/kg",
+    "descripcion": "Potasio presente en el suelo",
+    "sigla": "K"
+  },
+  "LIMOS":{
+    "nombre":"Limos",
+    "unidad": "%",
+    "descripcion": "Porcentaje de limos en el suelo",
+    "sigla": ""
+  },
+  "Mg":{
+    "nombre":"Magnesio",
+    "unidad": "cmol/kg",
+    "descripcion": "Magnesio presente en el suelo",
+    "sigla": "Mg"
+  },
+  "Mn":{
+    "nombre":"Manganeso",
+    "unidad": "ppm",
+    "descripcion": "Manganeso presente en el suelo",
+    "sigla": "Mn"
+  },
+  "N_TOTAL":{
+    "nombre":"Nitrógeno total",
+    "unidad": "%",
+    "descripcion": "Nitrógeno total  presente en el suelo",
+    "sigla": ""
+  },
+  "Na":{
+    "nombre":"Sodio",
+    "unidad": "cmol/kg",
+    "descripcion": "Sodio presente en el suelo, permite identificar suelos sódicos",
+    "sigla": "Na"
+  },
+  "P":{
+    "nombre":"Fósforo",
+    "unidad": "ppm",
+    "descripcion": "Fósforo presente en el suelo",
+    "sigla": "P"
+  },
+  "pH":{
+    "nombre":"Potencial de hidrógeno",
+    "unidad": "",
+    "descripcion": "Grado de acidez o alcalinidad del suelo",
+    "sigla": "pH"
+  },
+  "S":{
+    "nombre":"Azufre",
+    "unidad": "ppm",
+    "descripcion": "Azufre presente en el suelo",
+    "sigla": "S"
+  },
+  "SB":{
+    "nombre":"Saturación de bases",
+    "unidad": "%",
+    "descripcion": "Suma de cationes basicos presentes en lso sitios de intercambio del suelo",
+    "sigla": ""
+  },
+  "textura":{
+    "nombre":"Clase textural",
+    "unidad": "",
+    "descripcion": "Distribución porcentual de las particúlas de arenas, limos y arcillas en el suelo",
+    "sigla": ""
+  },
+  "Zn":{
+    "nombre":"Zinc",
+    "unidad": "ppm",
+    "descripcion": "Zinc presente en el suelo",
+    "sigla": "Zn"
+  },
+  "Ca_Mg":{
+    "nombre":"Relación catiónica Ca/Mg",
+    "unidad": "",
+    "descripcion": "Relación catiónica entre calcio:magnesio (rango de referencia 3 - 5), permite identificar la disponibilidad de estos nutrientes",
+    "sigla": ""
+  }, 
+  "Ca_K":{
+    "nombre":"Relación catiónica Ca/K",
+    "unidad": "",
+    "descripcion": "Relación catiónica entre calcio:potasio (rango de referencia 12 - 18), permite identificar la disponibilidad de estos nutrientes",
+    "sigla": ""
+  }, 
+  "Mg_K":{
+    "nombre":"Relación catiónica Mg/K",
+    "unidad": "",
+    "descripcion": "Relación catiónica entre magnesio:potasio (rango de referencia 6 - 8), permite identificar la disponibilidad de estos nutrientes",
+    "sigla": ""
+  }, 
+  "K_Mg":{
+    "nombre":"Relación catiónica K/Mg",
+    "unidad": "",
+    "descripcion": "Relación catiónica entre potasio:magnesio (rango de referencia 0.2 - 0.3), permite identificar la disponibilidad de estos nutrientes",
+    "sigla": ""
+  },
+  "categorias":{
+    "textura_suelo":{
+      "nombre": "Textura del suelo",
+      "variables": ["textura", "ARCILLAS", "ARENAS", "LIMOS" ],
+      "descripcion": ""
+    },
+    "fertilidad":{
+      "nombre": "Fertilidad del suelo",
+      "variables": ["pH", "F_MO", "C.O.", "CIC", "SB", "CE" , "FERTILIDAD"],
+      "descripcion": ""
+    },
+    "nutrientes":{
+      "nombre": "Elementos nutricionales del suelo",
+      "variables": [ "P", "K", "Ca", "Mg", "S", "Fe", "Cu", "Mn", "Zn", "B", "Aluminio", "Na" ],
+      "descripcion": ""
+    },
+    "realciones":{
+      "nombre": "Relaciones entre elementos nutricionales del suelo",
+      "variables": ["Ca_Mg", "Ca_K", "Mg_K", "K_Mg" ],
+      "descripcion": ""
+    }
+  }
+}
