@@ -1,0 +1,8 @@
+# Data
+*.tif
+
+# test
+test.ipynb
+
+# env
+/apisuelos-env/
