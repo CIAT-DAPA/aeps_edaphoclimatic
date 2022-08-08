@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <!--   Leaflet 1.8   -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""></script>
+  <!--   leaflet locate 0.76.1    -->
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/dist/L.Control.Locate.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/dist/L.Control.Locate.min.js"
+    charset="utf-8"></script>
+  <!--   Convertir PDF   -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.10/purify.min.js"
+    integrity="sha512-Qr/d6af6cN41/GIKiSmrQd4Y19/fo0YvWhD1VND8O+BsfbFBaZI4K7VVPoUZrd8PzMQ3CE71CkMjhrKf1NbhdQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!--     Google Analytics  tag (gtag.js)  -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-FC8BZ4G6BS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-FC8BZ4G6BS');
+  </script> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.10/umd.js" referrerpolicy="no-referrer"></script>
+  <!--     Geojson     -->
+  <script src="static/js/municipios_estudio.js"></script>
+  <script src="static/js/veredas_municipios_estudio.js"></script>
+  <script src="static/js/BoyacaClusters.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      text-align: left;
+      background-color: #fff;
+    }
+
+    #map {
+      width: 100%;
+      height: calc(100vh - 56px);
+      opacity: .99;
+    }
+
+    #datos {
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+
+    #btn-save {
+      border-radius: 5px;
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      transition: all 300ms ease 0ms;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      z-index: 99;
+    }
+
+    #btn-save:hover {
+      background-color: #2c2fa5;
+      box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+      transform: translateY(-7px);
+    }
+
+    .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+    }
+
+    .legend {
+      line-height: 18px;
+      color: #555;
+    }
+
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 991.98px) {
+      #map {
+        height: calc(50vh - 56px);
+      }
+
+      #datos {
+        height: 44.9vh;
+      }
+
+      .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+      }
+
+      .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+      }
+
+      .legend {
+        line-height: 18px;
+        color: #555;
+      }
+
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+      }
+    }
+  </style>
+
+  <title>AEPS - Zonificación</title>
+</head>
+
+<body>
+
+  <div class="container-fuid" id="pdf">
+    <!--  Navbar Brand  -->
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Sixth navbar example">
+      <div class="container-fluid">
+        <a class="navbar-brand ps-3">AEPS - Zonificación</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample06"
+          aria-controls="navbarsExample06" aria-expanded="true" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse show" id="navbarsExample06" style="">
+          <div class=" d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+              <span class="input-group-text d-none d-md-inline">Latitud y Longitud</span>
+              <input step="any" type="number" aria-label="Latitud" name="latitud" id="latitud" class="form-control"
+                placeholder="Latitud..." value="" data-bs-toggle="tooltip" data-placement="right"
+                title="Grados decimales"></input>
+              <input step="any" type="number" aria-label="Longitud" name="longitud" id="longitud" class="form-control"
+                placeholder="Longitud..." value="" data-bs-toggle="tooltip" data-placement="right"
+                title="Grados decimales"></input>
+              <button class="btn btn-primary" onclick="consulta()">Consultar</button>
+              <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">Info</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="row w-100 m-0 ">
+      <!--   Mapa  -->
+      <div class="col-sm-12 p-lg-0 col-lg-8 d-flex flex-column justify-content-center p-3">
+        <div id="map"></div>
+      </div>
+
+      <!--  Presentacion de datos -->
+      <div class="col-sm-12 col-lg-4" id="datos">
+        <div id="container-datos">
+          <p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto
+            del mapa para visualizar los datos</p>
+        </div>
+        <div id="chart">
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Descarga de datos</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="nombreUsuario" class="form-label">Por favor ingrese su nombre para descargar la
+              información</label>
+            <input type="text" class="form-control w-99" id="nombreUsuario" placeholder="Nombre...">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="pdf()">Descargar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  Toast  -->
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+      <div id="liveToast" class="toast d-flex align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="spinner-border text-secondary ms-2" id="spinner" role="status"></div>
+        <div class="toast-body" id="toast-body">
+          Cargando...
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <!--  Cuerpo menu Info  -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Información</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body" id="info">
+        <img src="static/assets/img/logo.png" class="img-fluid" alt="logo-Boyaca-se-adapta" id="logo">
+        <p>Gracias al proyecto Boyacá se adapta al cambio climático y con el acompañamiento de la alianza Bioversity
+          CIAT se realizan actividades relacionadas con la captura y análisis de datos que, posteriormente se presentan
+          a través de sistemas de visualización dinámicos y actualizables con el fin de transformar fortalecer la toma
+          de decisiones tanto de técnicos como de productores en sus fincas.</p>
+        <p>Aqui ira informacion de las variables, manejo de la app y mas</p>
+      </div>
+    </div>
+  </div>
+
+  <button href="#" class="btn-flotante btn btn-secondary" id="btn-save" data-bs-toggle="modal"
+    data-bs-target="#exampleModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+      class="bi bi-box-arrow-down" viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1h-2z" />
+      <path fill-rule="evenodd"
+        d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z" />
+    </svg>
+  </button>
+
+
+
+  <!-- Scripts Boostrap  -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+    crossorigin="anonymous"></script>
+  <!--  Script Apexcharts-->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <script>
+    window.jsPDF = window.jspdf.jsPDF
+
+    //     Alertas
+
+    var toastLive = document.getElementById('liveToast')
+    var toast = new bootstrap.Toast(toastLive)
+    var toastBody = document.getElementById('toast-body')
+    var spinner = document.getElementById('spinner')
+
+    //      Btn-save
+
+    var btnSave = document.getElementById('btn-save')
+    btnSave.setAttribute("style", "display: none;")
+    var containerDatos = document.getElementById("container-datos")
+    var infodatos, datos
+
+    //      Descripciones
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    //      MAPA              
+
+    var map = L.map('map', {
+      maxBounds: [[5, -72.6], [6, -74]]
+    }).
+      setView([5.48, -73.334],
+        11);
+    var marker = L.marker([0.0, 0.0])
+
+    var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmljdG9yOTkzIiwiYSI6ImNsM2l5bG5zZjE1enAzY21yaHQ3eHp0d2IifQ.9svrumoxUySacey5r07Wuw', {
+      attribution: 'Map data &copy; <a href="https://www.mapbox.com/">Mapbox Light</a> contributors',
+      minZoom: 8,
+    });
+
+    //    Street
+
+    var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      minZoom: 8,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    // Light
+
+    var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20,
+      minZoom: 8,
+      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    //  Satelital
+
+    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; the GIS User Community',
+      maxZoom: 17,
+      minZoom: 8,
+    });
+
+    var Stamen_TonerLabels = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.{ext}', {
+      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: 'abcd',
+      maxZoom: 20,
+      ext: 'png'
+    });
+
+    //  Terreno
+
+    var Jawg_Terrain = L.tileLayer('https://{s}.tile.jawg.io/jawg-terrain/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+      attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      minZoom: 0,
+      maxZoom: 22,
+      subdomains: 'abcd',
+      accessToken: 'MisUUnknR3xb193VpKsIXBjvwh2eeVvSPEYoZ5rC5id9NTLczrAZj5Z2MbeXrUYg'
+    });
+
+    map.addControl(new L.Control.Layers({
+      "Default": Stadia_AlidadeSmooth,
+      "Street": OpenStreetMap_Mapnik,
+      'Satelite': Esri_WorldImagery,
+    }, {}));
+
+    map.on('click', function (e) {
+      document.getElementById("longitud").value = e.latlng.lng
+      document.getElementById("latitud").value = e.latlng.lat
+      consulta()
+    });
+
+    map.on('locationfound', function (e) {
+      console.log("a ver mani manito esto sale de aqui")
+      document.getElementById("longitud").value = e.latlng.lng
+      document.getElementById("latitud").value = e.latlng.lat
+      consulta()
+      lc.stop()
+    });
+
+    function getColor(d) {
+      return d == 'Samacá' ? "#40ff00" :
+        d == 'Ventaquemada' ? "#eee01b" :
+          d == 'Motavita' ? "#ff9900" :
+            d == 'Siachoque' ? "#ff00dd" :
+              d == 'Soracá' ? "#ff0000" :
+                d == 'Toca' ? "#0048ff" :
+                  "#24c2af";
+    }
+
+    var capCluster = L.geoJSON(cluster).addTo(map)
+
+    var capMunicipios = L.geoJSON(municipios, {
+      style: function (feature) {
+        return {
+          color: getColor(feature.properties.municipios),
+          weight: 1
+        }
+      }
+    }).addTo(map)
+
+    var legend = L.control({ position: 'bottomleft' });
+
+    legend.onAdd = function (map) {
+
+      var div = L.DomUtil.create('div', 'info legend'),
+        labels = ['Samacá', 'Ventaquemada', 'Motavita', 'Siachoque', 'Soracá', 'Toca', 'Tunja'];
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < labels.length; i++) {
+        div.innerHTML +=
+          '<i style="background:' + getColor(labels[i]) + '"></i> ' +
+          labels[i] + '<br>';
+      }
+
+      return div;
+    };
+
+    legend.addTo(map);
+
+    map.on('locationerror', function (e) {
+      console.log(e);
+      console.log("Acceso a la ubicación denegado.");
+      containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto del mapa para visualizar los datos</p>`
+      toastBody.innerHTML = "Acceso a la ubicación denegado."
+      toastLive.setAttribute("style", "background-color: #ff3636e3;");
+      marker.remove(map)
+      spinner.setAttribute("style", "display: none;");
+      toast.show()
+      btnSave.setAttribute("style", "display: none;");
+    });
+
+    var lc = L.control.locate({
+      strings: {
+        title: "Busca tu ubicación"
+      },
+      flyTo: true,
+      locateOptions: {
+        maxZoom: 14
+      },
+      drawMarker: false,
+      onLocationError: function (e) {
+        console.log(e);
+        console.log("Acceso a la ubicación denegado.");
+      },
+    }).addTo(map);
+
+    //     Llamado info
+
+    $.ajax({
+      url: `/api/v1/infodatos`,
+      type: "GET",
+      data: {},
+      success: function (response) {
+        console.log("Informacion de los datos: ", response)
+        infodatos = response
+        p = response.ACIDEZ_INT
+        toastBody.innerHTML = "Datos cargados"
+        toastLive.setAttribute("style", "background-color: rgb(27 243 69 / 85%);");
+        spinner.setAttribute("style", "display: none;");
+        toast.show()
+      },
+      error: function (error) {
+        console.log(error);
+        toastBody.innerHTML = "Error de conexion, intente mas tarde"
+        toastLive.setAttribute("style", "background-color: #ff3636e3;");
+        spinner.setAttribute("style", "display: none;");
+        toast.show()
+      },
+    });
+
+  </script>
+  <script type="text/javascript">
+
+    function consulta() {
+      let longitud = document.getElementById("longitud").value;
+      let latitud = document.getElementById("latitud").value;
+      var info = document.getElementById("info")
+      marker.remove(map)
+      spinner.setAttribute("style", "display: ;");
+      btnSave.setAttribute("style", "display: none;");
+      toastLive.setAttribute("style", "background-color: #fdfdfd;");
+      toastBody.innerHTML = "Buscando datos..."
+      toast.show()
+      $.ajax({
+        url: `/api/v1/data?longitude=${longitud}&latitude=${latitud}`,
+        type: "GET",
+        data: {},
+        success: function (response) {
+          console.log(`con longitud: ${longitud} y latitud: ${latitud}`)
+          console.log('respuesta: ', response)
+          if (response.message) {
+            containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto del mapa para visualizar los datos</p>`
+            toastBody.innerHTML = response.message
+            toastLive.setAttribute("style", "background-color: #ffff00d1;");
+            spinner.setAttribute("style", "display: none;");
+            toast.show()
+          }
+          else {
+            containerDatos.innerHTML = "";
+            datos = response;
+            marker.setLatLng([latitud, longitud]).addTo(map);
+            map.flyTo([latitud, longitud], 14);
+            const categorias = infodatos.categorias;
+            for (const categoria in categorias) {
+              containerDatos.insertAdjacentHTML('beforeend',
+                `<h3 class="text-center">${categorias[categoria].nombre}</h3>`
+              )
+
+              const variables = categorias[categoria].variables
+              variables.forEach(key => {
+                const element = response[key];
+                const nombre = infodatos[key].nombre;
+                const unidad = infodatos[key].unidad;
+                const descripcion = infodatos[key].descripcion;
+                const sigla = infodatos[key].sigla;
+                containerDatos.insertAdjacentHTML('beforeend',
+                  `<div class="card my-3">
+                    <h5 class="card-header"> ${nombre} ${sigla && " - " + sigla} ${unidad && " (" + unidad + ")"}
+                      ${descripcion && '<a class="d-inline-block" data-bs-toggle="tooltip" title="' + descripcion + '">' +
+                  `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                        </svg>
+                      </a>`}
+                    </h5>
+                    <div class="card-body">
+                      <p class="card-text">${element}</p>
+                    </div>
+                  </div>`
+                );
+              });
+              if (categoria == "textura_suelo") {
+                const textura = infodatos.categorias.textura_suelo.variables.filter(variable => variable != "textura")
+                const series = textura.map(element => response[element]);
+                const labels = textura.map(element => infodatos[element].nombre)
+                containerDatos.insertAdjacentHTML('beforeend', '<div id="chart-textura"> </div>')
+                chartRadialBar(series, labels, response["textura"])
+              } else if (categoria == "realciones") {
+                const relaciones = infodatos.categorias.realciones
+                const data = relaciones.variables.map(element => response[element]);
+                const categories = relaciones.variables.map(element => infodatos[element].nombre.replace("Relación catiónica ", ""))
+                containerDatos.insertAdjacentHTML('beforeend', '<div id="chart-relaciones"> </div>')
+                chartBar(data, categories)
+              }
+            }
+            tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+              return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+
+            toastBody.innerHTML = "Datos cargados"
+            toastLive.setAttribute("style", "background-color: rgb(27 243 69 / 85%);");
+            spinner.setAttribute("style", "display: none;");
+            btnSave.style.removeProperty("display")
+            toast.show()
+          }
+        },
+        error: function (error) {
+          console.log(error);
+          containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto del mapa para visualizar los datos</p>`
+          toastBody.innerHTML = "Error de conexion, intente mas tarde"
+          toastLive.setAttribute("style", "background-color: #ff3636e3;");
+          spinner.setAttribute("style", "display: none;");
+          toast.show()
+        },
+      });
+    }
+    function chartBar(data, categories) {
+      var options = {
+        series: [{
+          name: "Relación",
+          data: data
+        }],
+        chart: {
+          height: 350,
+          type: 'bar'
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '45%',
+            distributed: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        legend: {
+          show: false
+        },
+        xaxis: {
+          categories: categories,
+          labels: {
+            style: {
+              fontSize: '12px'
+            }
+          },
+          title: {
+            text: 'Relaciones catiónicas'
+          }
+        },
+        yaxis: {
+          labels: {
+            formatter: function (val, index) {
+              return val.toFixed(3);
+            }
+          },
+        }
+      };
+
+      var chart = new ApexCharts(document.querySelector("#chart-relaciones"), options);
+      chart.render();
+    }
+
+    function chartRadialBar(series, labels, clase) {
+      var options = {
+        series: series,
+        chart: {
+          height: 390,
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            offsetY: 0,
+            startAngle: 0,
+            endAngle: 270,
+            hollow: {
+              margin: 5,
+              size: '40%',
+              background: 'transparent',
+            },
+            dataLabels: {
+              name: {
+                fontSize: '22px',
+              },
+              value: {
+                fontSize: '16px',
+              },
+              total: {
+                show: true,
+                showAlways: true,
+                label: 'Clase textural',
+                formatter: function (w) {
+                  return clase
+                }
+              }
+            }
+          }
+        },
+        labels: labels,
+        legend: {
+          show: true,
+          floating: true,
+          fontSize: '16px',
+          position: 'left',
+          offsetX: 19,
+          offsetY: 14,
+          labels: {
+            useSeriesColors: true,
+          },
+          markers: {
+            size: 0
+          },
+          formatter: function (seriesName, opts) {
+            return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex] + "%"
+          },
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              show: true
+            }
+          }
+        }]
+      };
+
+      var chart = new ApexCharts(document.querySelector("#chart-textura"), options);
+      chart.render();
+    }
+
+    function pdf() {
+
+      let longitud = document.getElementById("longitud").value;
+      let latitud = document.getElementById("latitud").value;
+      let nombreUsuario = document.getElementById("nombreUsuario").value;
+
+      var doc = new jsPDF({
+        orientation: "p",
+        format: "letter"
+      });
+
+      var docWidth = doc.internal.pageSize.width;
+      var docHeight = doc.internal.pageSize.height;
+
+      var pdfConfig = {
+        headerTextSize: 15,
+        labelTextSize: 12,
+        fieldTextSize: 10,
+        lineHeight: 6,
+        subLineHeight: 4,
+        cell: 15
+      };
+
+      //inicia a 15mm
+      var currentHeight = 15
+
+      //      Encabezado
+
+      doc.addImage("./static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+
+      currentHeight += pdfConfig.subLineHeight;
+      currentHeight += pdfConfig.subLineHeight;
+      doc.setFontSize(pdfConfig.fieldTextSize);
+      doc.text(docWidth - 10, currentHeight, "boyacaseadapta@gmail.com", "right");
+      currentHeight += pdfConfig.subLineHeight;
+      doc.text(docWidth - 10, currentHeight, "https://www.boyacaseadapta.com", "right");
+
+      currentHeight += pdfConfig.subLineHeight;
+      doc.text(docWidth - 10, currentHeight, "https://twitter.com/boyacaseadaptac", "right");
+
+      currentHeight += pdfConfig.subLineHeight;
+      doc.text(docWidth - 10, currentHeight, "https://www.facebook.com/BoyacaSeAdaptaC", "right");
+
+      currentHeight += pdfConfig.subLineHeight;
+      console.log(currentHeight)
+      doc.line(10, currentHeight, docWidth - 10, currentHeight);
+
+      //    Informacion
+
+      doc.setFontSize(pdfConfig.fieldTextSize);
+      currentHeight += pdfConfig.lineHeight;
+
+      doc.text(10, currentHeight, "Consultado por:");
+      currentHeight += pdfConfig.lineHeight;
+
+      doc.setFontSize(pdfConfig.headerTextSize);
+      doc.text(10, currentHeight, nombreUsuario);
+      console.log(currentHeight)
+      currentHeight += pdfConfig.lineHeight;
+
+      doc.setFontSize(pdfConfig.fieldTextSize);
+
+      doc.text(10, currentHeight, `Longitud: ${longitud}`);
+      doc.text(docWidth - 10, currentHeight, `Fecha de consulta:`, "right");
+      currentHeight += pdfConfig.lineHeight;
+
+      doc.text(10, currentHeight, `Latitud: ${latitud}`);
+      doc.text(docWidth - 10, currentHeight, new Date(Date.now()).toLocaleDateString(), "right");
+      currentHeight += pdfConfig.subLineHeight * 3;
+
+      //   Mensaje de introduccion
+
+      doc.setFontSize(pdfConfig.headerTextSize);
+      doc.text(docWidth / 2, currentHeight, "Perfil de fertilidad de suelos, basado en Big Data", "center");
+      currentHeight += pdfConfig.subLineHeight;
+      currentHeight += pdfConfig.subLineHeight;
+
+      doc.setFontSize(pdfConfig.fieldTextSize);
+      let lines = doc.splitTextToSize("Este resultado es una aproximación a las características de sus suelos, basado en análisis de información, a partir de una malla rígida, capturada por los profesionales del proyecto. No reemplaza un análisis de suelo convencional, pero le servirá de guía para la toma de decisiones.", docWidth - 20);
+      doc.text(lines, 10, currentHeight);
+
+      //   Datos
+
+      currentHeight += pdfConfig.subLineHeight * 4;
+
+      const categorias = infodatos.categorias;
+
+      for (const categoria in categorias) {
+
+        if (currentHeight + 35 > docHeight - 20) {
+          doc.addPage()
+          doc.addImage("./static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+          doc.line(10, 39, docWidth - 10, 39);
+          currentHeight = 51
+        }
+
+        doc.setFontSize(pdfConfig.headerTextSize);
+        doc.text(docWidth / 2, currentHeight, categorias[categoria].nombre, "center");
+
+        currentHeight += pdfConfig.subLineHeight;
+        currentHeight += pdfConfig.subLineHeight;
+
+        const variables = categorias[categoria].variables
+
+        for (let index = 0; index < variables.length; index += 2) {
+
+          if (currentHeight + 30 > docHeight - 20) {
+            doc.addPage()
+            doc.addImage("./static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+            doc.line(10, 39, docWidth - 10, 39);
+            currentHeight = 51
+          }
+          const key = variables[index];
+          const key2 = variables[index + 1]
+
+          const element = datos[key];
+          const nombre = infodatos[key].nombre;
+          const unidad = infodatos[key].unidad;
+          const sigla = infodatos[key].sigla;
+          const element2 = key2 ? datos[key2] : "";
+          const nombre2 = key2 ? infodatos[key2].nombre : "";
+          const unidad2 = key2 ? infodatos[key2].unidad : "";
+          const sigla2 = key2 ? infodatos[key2].sigla : "";
+
+          doc.cell(10, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${nombre}${sigla && " - " + sigla}${unidad && " (" + unidad + ")"}`);
+          doc.cell(docWidth / 2, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${nombre2}${sigla2 && " - " + sigla2}${unidad2 && " (" + unidad2 + ")"}`);
+          currentHeight += pdfConfig.cell;
+
+          doc.cell(10, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${element}`);
+          doc.cell(docWidth / 2, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${element2}`);
+
+          currentHeight += pdfConfig.cell;
+        }
+
+        currentHeight += pdfConfig.subLineHeight;
+        currentHeight += pdfConfig.subLineHeight;
+
+      }
+      doc.save(`suelo-${nombreUsuario}`)
+    }
+  </script>
+</body>
+
+</html>
