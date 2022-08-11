@@ -107,6 +107,16 @@
       opacity: 0.7;
     }
 
+    .ejemploBuscar {
+      width: 20px;
+      background-color: white;
+      padding: 2px;
+      border: solid;
+      border-width: 1px;
+      border-radius: 2px;
+      border-color: grey;
+    }
+
     @media (max-width: 991.98px) {
       #map {
         height: calc(50vh - 56px);
@@ -117,8 +127,8 @@
       }
 
       .info {
-        padding: 6px 8px;
-        font: 14px/16px Arial, Helvetica, sans-serif;
+        padding: 2px 4px;
+        font: 10px/12px Arial, Helvetica, sans-serif;
         background: white;
         background: rgba(255, 255, 255, 0.8);
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
@@ -131,13 +141,13 @@
       }
 
       .legend {
-        line-height: 18px;
+        line-height: 14px;
         color: #555;
       }
 
       .legend i {
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         float: left;
         margin-right: 8px;
         opacity: 0.7;
@@ -189,7 +199,8 @@
       <div class="col-sm-12 col-lg-4" id="datos">
         <div id="container-datos">
           <p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto
-            del mapa para visualizar los datos</p>
+            del mapa para visualizar los datos. <br><br>
+            Más información pulsar el botón <strong>Info</strong>.</p>
         </div>
         <div id="chart">
         </div>
@@ -197,11 +208,11 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalDescarga" tabindex="-1" aria-labelledby="modalDescargaLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Descarga de datos</h5>
+            <h5 class="modal-title" id="modalDescargaLabel">Descarga de datos</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -211,7 +222,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancelar</button>
-            <button type="button" class="btn btn-primary" onclick="pdf()">Descargar</button>
+            <button type="button" class="btn btn-primary" onclick="pdf()" data-bs-dismiss="modal">Descargar</button>
           </div>
         </div>
       </div>
@@ -240,13 +251,68 @@
           CIAT se realizan actividades relacionadas con la captura y análisis de datos que, posteriormente se presentan
           a través de sistemas de visualización dinámicos y actualizables con el fin de transformar fortalecer la toma
           de decisiones tanto de técnicos como de productores en sus fincas.</p>
-        <p>Aqui ira informacion de las variables, manejo de la app y mas</p>
+
+        <h5>Consulta de datos</h5>
+        <p>Para realizar la consulta de los datos tiene varias opciones:</p>
+        <ul>
+          <li>
+            Ingresar la latitud y longitud de su lote en la barra superior y después presionar el botón
+            Consultar. Recuerde que las coordenadas deben estar en formato <strong>Grados decimales</strong>.
+          </li>
+          <li>
+            Buscar y seleccionar la ubicación en el mapa, el sistema tomara automáticamente las coordenadas y
+            realizara la consulta de los datos.
+          </li>
+          <li>
+            En dispositivos con GPS se cuanta con la opción de buscar la ubicación por medio de este. Para esto
+            debe presionar el botón
+            <img class="ejemploBuscar"
+              src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/location-arrow-solid.svg"
+              alt="flecha-busqueda">
+            ubicado en el mapa. El sistema solicitara permisos para utilizar el GPS del dispositivo los cuales debe
+            aceptar, de esta forma el sistema tomara las coordenadas de su ubicación actual y realiza la consulta
+            de los datos.
+          </li>
+        </ul>
+        <H5>Descarga de datos</H5>
+        <p>Después de realizar la consulta de los datos el sistema le permite descargarlos en formato
+          <strong>PDF</strong>
+          para lo cual debe pulsar el botón
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-box-arrow-down" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1h-2z" />
+            <path fill-rule="evenodd"
+              d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z" />
+          </svg>
+          que se encuentra en la esquina inferior derecha de la pantalla, debe ingresar su nombre y pulsar en el
+          botón de descargar.
+        </p>
+        <h5>Mapa</h5>
+        <p>El mapa cuenta con viarios mapas bases al igual que capas de información los cuales puede seleccionar
+          pulsando en el
+          botón
+          <img src="https://unpkg.com/leaflet@1.8.0/dist/images/layers.png" alt="capas">
+        </p>
+        <ul>
+          <h6>Mapas base</h6>
+          <li>Default</li>
+          <li>Street</li>
+          <li>Satelital</li>
+        </ul>
+        <ul>
+          <h6>Capas de informacion</h6>
+          <li>Municipios: delimita los municipios de estudio del proyecto</li>
+          <li>Clusters: </li>
+        </ul>
+
+        <p></p>
       </div>
     </div>
   </div>
 
   <button href="#" class="btn-flotante btn btn-secondary" id="btn-save" data-bs-toggle="modal"
-    data-bs-target="#exampleModal"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+    data-bs-target="#modalDescarga"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
       class="bi bi-box-arrow-down" viewBox="0 0 16 16">
       <path fill-rule="evenodd"
         d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1h-2z" />
@@ -343,21 +409,21 @@
     function getColor(d) {
       return d == 'Samacá' ? "#40ff00" :
         d == 'Ventaquemada' ? "#eee01b" :
-        d == 'Siachoque' ? "#ff00dd" :
-        d == 'Motavita' ? "#ff9900" :
-        d == 'Soracá' ? "#ff0000" :
-        d == 'Tunja' ? "#24c2af" :
-        d == 'Toca' ? "#0048ff" :
-        d == 1 ? "#4C00FF" :
-        d == 2 ? "#0019FF" :
-        d == 3 ? "#0080FF" :
-        d == 4 ? "#00E5FF" :
-        d == 5 ? "#00FF4D" :
-        d == 6 ? "#4DFF00" :
-        d == 7 ? "#E6FF00" :
-        d == 8 ? "#eee01b" :
-        d == 9 ? "#FFDE59" :
-                "#FFE0B3"
+          d == 'Siachoque' ? "#ff00dd" :
+            d == 'Motavita' ? "#ff9900" :
+              d == 'Soracá' ? "#ff0000" :
+                d == 'Tunja' ? "#24c2af" :
+                  d == 'Toca' ? "#0048ff" :
+                    d == 1 ? "#4C00FF" :
+                      d == 2 ? "#0019FF" :
+                        d == 3 ? "#0080FF" :
+                          d == 4 ? "#00E5FF" :
+                            d == 5 ? "#00FF4D" :
+                              d == 6 ? "#4DFF00" :
+                                d == 7 ? "#E6FF00" :
+                                  d == 8 ? "#eee01b" :
+                                    d == 9 ? "#FFDE59" :
+                                      "#FFE0B3"
     }
 
     //   Geojson Clusters
@@ -415,7 +481,7 @@
       "Municipios": capMunicipios,
       "Clusters": capCluster
     }
-    
+
     var layerControl = L.control.layers(mapasBase, overLay).addTo(map)
 
     // Funciones del mapa
@@ -522,7 +588,9 @@
           console.log(`con longitud: ${longitud} y latitud: ${latitud}`)
           console.log('respuesta: ', response)
           if (response.message) {
-            containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto del mapa para visualizar los datos</p>`
+            containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto
+            del mapa para visualizar los datos. <br><br>
+            Más información pulsar el botón <strong>Info</strong>.</p>`
             toastBody.innerHTML = response.message
             toastLive.setAttribute("style", "background-color: #ffff00d1;");
             spinner.setAttribute("style", "display: none;");
@@ -590,7 +658,9 @@
         },
         error: function (error) {
           console.log(error);
-          containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto del mapa para visualizar los datos</p>`
+          containerDatos.innerHTML = `<p class="mt-4 bg-light p-4 border rounded">Por favor ingrese una Latitud y Longitud o de click en un punto
+            del mapa para visualizar los datos. <br><br>
+            Más información pulsar el botón <strong>Info</strong>.</p>`
           toastBody.innerHTML = "Error de conexion, intente mas tarde"
           toastLive.setAttribute("style", "background-color: #ff3636e3;");
           spinner.setAttribute("style", "display: none;");
