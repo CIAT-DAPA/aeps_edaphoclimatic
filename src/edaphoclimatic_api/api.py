@@ -22,43 +22,59 @@ def home():
 @app.route('/api/v1/data', methods=['GET'])
 @cross_origin()
 def get_data():
-    longitude = request.args.get("longitude")
-    latitude = request.args.get("latitude")
 
-    if longitude and latitude :
-        path = join(BASE_DIR, 'data')
-        files = listdir(path)
-        files_tif = [f for f  in files if f[-3:] == 'tif']
-        c={}
-        for f in files_tif:
-            with rasterio.open(join(path, f)) as raster:
-                var = f.replace('_rfcovar.tif', '')
-                transformer = Transformer.from_crs("EPSG:4326", raster.crs, always_xy=True)
-                xx, yy = transformer.transform(longitude, latitude)
-                value = list(raster.sample([(xx, yy)]))[0][0]
-                c[var] = round(np.float64(value), 5)
-        normal = False
+    try:
+        longitude = request.args.get("longitude")
+        latitude = request.args.get("latitude")
+        if longitude and latitude :
 
-        for dato in c.values():
-            if dato != -3.3999999521443642e+38:
-                normal = True
-        if normal:
-            c["Ca_Mg"] = round(c["Ca"] / c["Mg"], 5)
-            c["Ca_K"] = round(c["Ca"] / c["K"], 5)
-            c["Mg_K"] = round(c["Mg"] / c["K"], 5)
-            c["K_Mg"] = round(c["K"] / c["Mg"], 5)
-            print('Para las coordenadas:', 'Latitud: '+ latitude, 'Longitud: ' + longitude, 'los datos son: ', sep='\n' )
-            print(c)
-            return jsonify(c)
+            if int(float(latitude)) > 90 or int(float(latitude)) < -90:
+                return jsonify({
+                    'message': "Latitud por fuera de los valores normales"
+                })
+
+            if int(float(longitude)) > 180 or int(float(longitude)) < -180:
+                return jsonify({
+                    'message': "Longitud por fuera de los valores normales"
+                })
+            path = join(BASE_DIR, 'data')
+            files = listdir(path)
+            files_tif = [f for f  in files if f[-3:] == 'tif']
+            c={}
+            for f in files_tif:
+                with rasterio.open(join(path, f)) as raster:
+                    var = f.replace('_rfcovar.tif', '')
+                    transformer = Transformer.from_crs("EPSG:4326", raster.crs, always_xy=True)
+                    xx, yy = transformer.transform(longitude, latitude)
+                    value = list(raster.sample([(xx, yy)]))[0][0]
+                    c[var] = round(np.float64(value), 5)
+            normal = False
+
+            for dato in c.values():
+                if dato != -3.3999999521443642e+38:
+                    normal = True
+            if normal:
+                c["Ca_Mg"] = round(c["Ca"] / c["Mg"], 5)
+                c["Ca_K"] = round(c["Ca"] / c["K"], 5)
+                c["Mg_K"] = round(c["Mg"] / c["K"], 5)
+                c["K_Mg"] = round(c["K"] / c["Mg"], 5)
+                print('Para las coordenadas:', 'Latitud: '+ latitude, 'Longitud: ' + longitude, 'los datos son: ', sep='\n' )
+                print(c)
+                return jsonify(c)
+            else:
+                print('las coordenadas:', 'Latitud: '+ latitude, 'Longitud: ' + longitude, 'estan fuera de los limites', sep='\n' )
+                return jsonify({
+                    'message': "Coordenadas por fuera del area de estudio"
+                })
         else:
-            print('las coordenadas:', 'Latitud: '+ latitude, 'Longitud: ' + longitude, 'estan fuera de los limites', sep='\n' )
             return jsonify({
-                'message': "Coordenadas fuera de los limites"
+                'message': "No hay Longitud o Latitud"
             })
-    else:
+    except Exception as e:
+        print("type error: " + str(e))
         return jsonify({
-            'message': "No hay Longitud o Latitud"
-        })
+                'message': "Error en el servidor"
+            })
 
 
 #retorna informacion relacionada a los datos como son nombre de la variable, descripcion
