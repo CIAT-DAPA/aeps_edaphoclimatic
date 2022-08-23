@@ -42,6 +42,7 @@
   <script src="static/js/municipios_estudio.js"></script>
   <script src="static/js/veredas_municipios_estudio.js"></script>
   <script src="static/js/BoyacaClusters.js"></script>
+  <script src="static/js/zona_de_estudio.js"></script>
   <style>
     body {
       margin: 0;
@@ -303,7 +304,8 @@
         <ul>
           <h6>Capas de informacion</h6>
           <li>Municipios: delimita los municipios de estudio del proyecto</li>
-          <li>Clusters: </li>
+          <li>Zona de estudio: delimita la zona donde se realizaron los estudios de suelo y las que cuentan con información</li>
+          <li>Clusters: divide la zona de estudio en zonas mas pequeñas con características similares</li>
         </ul>
 
         <p></p>
@@ -477,9 +479,21 @@
 
     legendMunicipios.addTo(map)
 
+    //  GeoJson zona de estudio
+
+    var capZonaEstudio = L.geoJSON(zonaEstudio, {
+      style: function (feature) {
+        return {
+          color: "#000000",
+          weight: 1,
+        }
+      }
+    }).addTo(map)
+
     var overLay = {
       "Municipios": capMunicipios,
-      "Clusters": capCluster
+      "Zona de Estudio": capZonaEstudio,
+      "Clusters": capCluster,
     }
 
     var layerControl = L.control.layers(mapasBase, overLay).addTo(map)
@@ -501,7 +515,7 @@
     map.on('overlayadd', function (eventLayer) {
       if (eventLayer.name === 'Municipios') {
         map.addControl(legendMunicipios);
-      } else {
+      } else if (eventLayer.name === 'Clusters'){
         map.addControl(legendClusters);
       }
     })
@@ -509,7 +523,7 @@
     map.on('overlayremove', function (eventLayer) {
       if (eventLayer.name === 'Municipios') {
         map.removeControl(legendMunicipios);
-      } else {
+      } else if (eventLayer.name === 'Clusters') {
         map.removeControl(legendClusters);
       }
     })
