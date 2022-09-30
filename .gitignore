@@ -6,3 +6,9 @@ test.ipynb
 
 # env
 /apisuelos-env/
+
+#prueba del front
+/src/edaphoclimatic_web_js/
+
+# Excel con los datos de los Clusters
+data_clusters.xlsx

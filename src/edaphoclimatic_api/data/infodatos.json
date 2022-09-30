@@ -185,15 +185,39 @@
     "descripcion": "Relación catiónica entre potasio:magnesio (rango de referencia 0.2 - 0.3), permite identificar la disponibilidad de estos nutrientes",
     "sigla": ""
   },
+  "Prof_efect":{
+    "nombre":"Profundidad efectiva",
+    "unidad": "cm",
+    "descripcion": "",
+    "sigla": ""
+  },
+  "Prec_anual":{
+    "nombre":"Precipitación anual",
+    "unidad": "mm",
+    "descripcion": "Precipitación anual acumulada",
+    "sigla": ""
+  },
+  "CV_prec":{
+    "nombre":"Coeficiente de variación de la precipitación anual",
+    "unidad": "%",
+    "descripcion": "",
+    "sigla": ""
+  },
+  "Altura":{
+    "nombre":"Altura",
+    "unidad": "%",
+    "descripcion": "Elevación del sitio en escala de 12.5 m ",
+    "sigla": ""
+  },
   "categorias":{
-    "textura_suelo":{
-      "nombre": "Textura del suelo",
-      "variables": ["textura", "ARCILLAS", "ARENAS", "LIMOS" ],
-      "descripcion": ""
-    },
     "fertilidad":{
       "nombre": "Fertilidad del suelo",
       "variables": ["pH", "F_MO", "C.O.", "CIC", "SB", "CE" , "FERTILIDAD"],
+      "descripcion": ""
+    },
+    "textura_suelo":{
+      "nombre": "Textura del suelo",
+      "variables": ["textura", "ARCILLAS", "ARENAS", "LIMOS" ],
       "descripcion": ""
     },
     "nutrientes":{
@@ -204,6 +228,11 @@
     "realciones":{
       "nombre": "Relaciones entre elementos nutricionales del suelo",
       "variables": ["Ca_Mg", "Ca_K", "Mg_K", "K_Mg" ],
+      "descripcion": ""
+    },
+    "zonas":{
+      "nombre": "Información Zona Edafoclimática",
+      "variables": [],
       "descripcion": ""
     }
   }
