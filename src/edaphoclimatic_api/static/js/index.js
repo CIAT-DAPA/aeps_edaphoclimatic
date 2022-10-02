@@ -290,28 +290,79 @@ window.jsPDF = window.jspdf.jsPDF
               const accordionBody = document.getElementById(`accordion-body-${categoria}`)
 
               const variables = categorias[categoria].variables
-              variables.forEach(key => {
-                const element = response[key];
-                const nombre = infodatos[key].nombre;
-                const unidad = infodatos[key].unidad;
-                const descripcion = infodatos[key].descripcion;
-                const sigla = infodatos[key].sigla;
-                accordionBody.insertAdjacentHTML('beforeend',
-                  `<div class="card my-3">
-                    <h5 class="card-header"> ${nombre} ${sigla && " - " + sigla} ${unidad && " (" + unidad + ")"}
-                      ${descripcion && '<a class="d-inline-block" data-bs-toggle="tooltip" title="' + descripcion + '">' +
+              // Renderizado tabla de zonifiacion Edafoclimatica
+              if (categoria == 'zonas') {
+                console.log('respuesta clusters', response['cluster'])
+                if (response['cluster'].message) {
+                  accordionBody.insertAdjacentHTML('beforeend',
+                    `<p class=" bg-light p-4 border rounded">${response['cluster'].message}</p>`
+                  );
+                } else {
+                  const cluster = response['cluster']
+                  let tabla = ''
+                  for (const variable in cluster) {
+                    if (variable !== 'numCluster') {
+                      let num = 1
+                      const count = Object.keys(cluster[variable]).length
+                      tabla += `<tr><td rowspan="${count}" class="align-middle">${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}</td>`
+                      console.log(`tamaño del arrego ${variable} es :`, count)
+                      if (Object.hasOwnProperty.call(cluster, variable)) {
+                        const datosVariable = cluster[variable];
+                        for (const rango in datosVariable) {
+                          if (Object.hasOwnProperty.call(datosVariable, rango)) {
+                            const porcentaje = datosVariable[rango];
+                            if (num !== 1)
+                              tabla += '<tr>'
+                            tabla += `<td>${rango}</td><td>${porcentaje} %</td></tr>`
+                          }
+                        }
+                      }
+                    }
+                  }
+                  accordionBody.insertAdjacentHTML('beforeend',
+                    `<p class=" bg-light p-4 border rounded">Usted se encuentra dentro de la <strong>zona edafoclimática 
+                      ${response['cluster'].numCluster}</strong></p>`
+                  );
+                  accordionBody.insertAdjacentHTML('beforeend',
+                    `<table class="table table-sm table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col" class="colmVariable">Variable</th>
+                          <th scope="col">Rango</th>
+                          <th scope="col">Porcentaje</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${tabla}
+                      </tbody>
+                    </table>`
+                  );
+                }
+              } else {
+                // renderizado tarjetas con informacion del punto
+                variables.forEach(key => {
+                  const element = response[key];
+                  const nombre = infodatos[key].nombre;
+                  const unidad = infodatos[key].unidad;
+                  const descripcion = infodatos[key].descripcion;
+                  const sigla = infodatos[key].sigla;
+                  accordionBody.insertAdjacentHTML('beforeend',
+                    `<div class="card my-3">
+                      <h5 class="card-header"> ${nombre} ${sigla && " - " + sigla} ${unidad && " (" + unidad + ")"}
+                        ${descripcion && '<a class="d-inline-block" data-bs-toggle="tooltip" title="' + descripcion + '">' +
                     `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                        </svg>
-                      </a>`}
-                    </h5>
-                    <div class="card-body">
-                      <p class="card-text">${element}</p>
-                    </div>
-                  </div>`
-                );
-              });
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                          </svg>
+                        </a>`}
+                      </h5>
+                      <div class="card-body">
+                        <p class="card-text">${element}</p>
+                      </div>
+                    </div>`
+                  );
+                });
+              }
               if (categoria == "textura_suelo") {
                 const textura = infodatos.categorias.textura_suelo.variables.filter(variable => variable != "textura")
                 const series = textura.map(element => response[element]);

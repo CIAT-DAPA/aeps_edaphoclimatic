@@ -205,7 +205,7 @@
   },
   "Altura":{
     "nombre":"Altura",
-    "unidad": "%",
+    "unidad": "msnm",
     "descripcion": "Elevación del sitio en escala de 12.5 m ",
     "sigla": ""
   },
