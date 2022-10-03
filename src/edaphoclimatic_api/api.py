@@ -72,7 +72,7 @@ def get_data():
             if numClus == -3.3999999521443642e+38:
                 c['cluster'] = {'message': "No hay zona Edafoclimática para estas coordenadas"}
             else:
-                df = pd.read_excel(path+ "\data_clusters.xlsx", usecols=["variable", "rango", f'C{numClus}'])
+                df = pd.read_excel(join(path, 'data_clusters.xlsx'), usecols=["variable", "rango", f'C{numClus}'])
                 df.fillna(0, inplace=True)
                 c['cluster']['numCluster'] = numClus
                 for index, row in df.iterrows():
