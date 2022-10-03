@@ -321,7 +321,7 @@ window.jsPDF = window.jspdf.jsPDF
                   }
                   accordionBody.insertAdjacentHTML('beforeend',
                     `<p class=" bg-light p-4 border rounded">Usted se encuentra dentro de la <strong>zona edafoclimática 
-                      ${response['cluster'].numCluster}</strong></p>`
+                      ${cluster.numCluster}</strong></p>`
                   );
                   accordionBody.insertAdjacentHTML('beforeend',
                     `<table class="table table-sm table-bordered">
@@ -520,19 +520,19 @@ window.jsPDF = window.jspdf.jsPDF
     // Funcion para generar pdf con los datos
     function pdf() {
 
-      let longitud = document.getElementById("longitud").value;
-      let latitud = document.getElementById("latitud").value;
-      let nombreUsuario = document.getElementById("nombreUsuario").value;
+      const longitud = document.getElementById("longitud").value;
+      const latitud = document.getElementById("latitud").value;
+      const nombreUsuario = document.getElementById("nombreUsuario").value;
 
       var doc = new jsPDF({
         orientation: "p",
         format: "letter"
       });
 
-      var docWidth = doc.internal.pageSize.width;
-      var docHeight = doc.internal.pageSize.height;
+      const docWidth = doc.internal.pageSize.width;
+      const docHeight = doc.internal.pageSize.height;
 
-      var pdfConfig = {
+      const pdfConfig = {
         headerTextSize: 15,
         labelTextSize: 12,
         fieldTextSize: 10,
@@ -606,7 +606,7 @@ window.jsPDF = window.jspdf.jsPDF
       const categorias = infodatos.categorias;
       for (const categoria in categorias) {
 
-        if (currentHeight + 35 > docHeight - 20) {
+        if (currentHeight + 35 > docHeight - 20 || categoria == 'zonas') {
           doc.addPage()
           doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
           doc.line(10, 39, docWidth - 10, 39);
@@ -620,35 +620,80 @@ window.jsPDF = window.jspdf.jsPDF
         currentHeight += pdfConfig.subLineHeight;
 
         const variables = categorias[categoria].variables
+        if (categoria == 'zonas') {
+          const cluster = datos['cluster']
+          const me = `Usted se encuentra dentro de la zona edafoclimática ${cluster.numCluster}`
+          doc.setFontSize(pdfConfig.fieldTextSize);
+          let lines = doc.splitTextToSize(`Usted se encuentra dentro de la zona edafoclimática ${cluster.numCluster}.`, docWidth - 20);
+          doc.text(lines, 10, currentHeight);
+          currentHeight += pdfConfig.subLineHeight;
+          doc.setFontSize(pdfConfig.headerTextSize);
 
-        for (let index = 0; index < variables.length; index += 2) {
+          doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell , `Variable`);
+          doc.cell((docWidth / 3) + 10, currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Rangos`);
+          doc.cell((docWidth / 1.5) , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Porcentajes`);
+          currentHeight += pdfConfig.cell;
 
-          if (currentHeight + 30 > docHeight - 20) {
-            doc.addPage()
-            doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
-            doc.line(10, 39, docWidth - 10, 39);
-            currentHeight = 51
+          console.log('tamaño del documento', docWidth)
+          console.log('fin del primer cuadro', (docWidth / 3) - 10)
+          console.log('fin del segundo', (docWidth / 1.5)- 20)
+          console.log('fin del ultimo', docWidth - 10)
+          for (const variable in cluster) {
+            if (variable !== 'numCluster') {
+
+              const count = Object.keys(cluster[variable]).length
+              if (currentHeight + (pdfConfig.cell * count) > docHeight - 20) {
+                doc.addPage()
+                doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+                doc.line(10, 39, docWidth - 10, 39);
+                currentHeight = 51
+              }
+              doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell * count, `${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}`);
+              if (Object.hasOwnProperty.call(cluster, variable)) {
+                const datosVariable = cluster[variable];
+                console.log(`datos variable ${variable}`, datosVariable)
+                for (const rango in datosVariable) {
+                  if (Object.hasOwnProperty.call(datosVariable, rango)) {
+                    const porcentaje = datosVariable[rango];
+                    console.log(`porcentaje para el rango ${rango}`, porcentaje)
+                    doc.cell((docWidth / 3) + 10 , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , rango);
+                    doc.cell((docWidth / 1.5), currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `${porcentaje}`);
+                    currentHeight += pdfConfig.cell;
+                  }
+                }
+              }
+            }
           }
-          const key = variables[index];
-          const key2 = variables[index + 1]
+        } else {
+          for (let index = 0; index < variables.length; index += 2) {
 
-          const element = datos[key];
-          const nombre = infodatos[key].nombre;
-          const unidad = infodatos[key].unidad;
-          const sigla = infodatos[key].sigla;
-          const element2 = key2 ? datos[key2] : "";
-          const nombre2 = key2 ? infodatos[key2].nombre : "";
-          const unidad2 = key2 ? infodatos[key2].unidad : "";
-          const sigla2 = key2 ? infodatos[key2].sigla : "";
+            if (currentHeight + 30 > docHeight - 20) {
+              doc.addPage()
+              doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+              doc.line(10, 39, docWidth - 10, 39);
+              currentHeight = 51
+            }
+            const key = variables[index];
+            const key2 = variables[index + 1]
 
-          doc.cell(10, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${nombre}${sigla && " - " + sigla}${unidad && " (" + unidad + ")"}`);
-          doc.cell(docWidth / 2, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${nombre2}${sigla2 && " - " + sigla2}${unidad2 && " (" + unidad2 + ")"}`);
-          currentHeight += pdfConfig.cell;
+            const element = datos[key];
+            const nombre = infodatos[key].nombre;
+            const unidad = infodatos[key].unidad;
+            const sigla = infodatos[key].sigla;
+            const element2 = key2 ? datos[key2] : "";
+            const nombre2 = key2 ? infodatos[key2].nombre : "";
+            const unidad2 = key2 ? infodatos[key2].unidad : "";
+            const sigla2 = key2 ? infodatos[key2].sigla : "";
 
-          doc.cell(10, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${element}`);
-          doc.cell(docWidth / 2, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${element2}`);
+            doc.cell(10, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${nombre}${sigla && " - " + sigla}${unidad && " (" + unidad + ")"}`);
+            doc.cell(docWidth / 2, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${nombre2}${sigla2 && " - " + sigla2}${unidad2 && " (" + unidad2 + ")"}`);
+            currentHeight += pdfConfig.cell;
 
-          currentHeight += pdfConfig.cell;
+            doc.cell(10, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${element}`);
+            doc.cell(docWidth / 2, currentHeight, (docWidth / 2) - 10, pdfConfig.cell, `${element2}`);
+
+            currentHeight += pdfConfig.cell;
+          }
         }
 
         currentHeight += pdfConfig.subLineHeight;
