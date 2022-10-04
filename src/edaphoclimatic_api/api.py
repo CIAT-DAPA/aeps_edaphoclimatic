@@ -67,8 +67,6 @@ def get_data():
                 value = list(raster.sample([(xx, yy)]))[0][0]
                 numClus = int(np.float64(value))
 
-            
-            
             if numClus == -3.3999999521443642e+38:
                 c['cluster'] = {'message': "No hay zona Edafoclimática para estas coordenadas"}
             else:
@@ -80,12 +78,24 @@ def get_data():
                         c['cluster'][row['variable']] = {}
                     c['cluster'][row['variable']][row['rango']] = row[f'C{numClus}']
 
-
             if normal:
                 c["Ca_Mg"] = round(c["Ca"] / c["Mg"], 5)
                 c["Ca_K"] = round(c["Ca"] / c["K"], 5)
                 c["Mg_K"] = round(c["Mg"] / c["K"], 5)
                 c["K_Mg"] = round(c["K"] / c["Mg"], 5)
+
+                df = pd.read_excel(join( path,"rangos_texturales.xlsx"), usecols=['ARENAS','LIMOS','ARCILLAS','clase','simbolo' ])
+
+                for index,row in df.iterrows():
+                    rango = row['ARENAS'].split('-')
+                    if c['ARENAS'] >= np.float32(rango[0]) and c['ARENAS'] < np.float32(rango[1]):
+                        rango = df.iloc[index]['ARCILLAS'].split('-')
+                        if c['ARCILLAS'] >= np.float32(rango[0]) and c['ARCILLAS'] < np.float32(rango[1]):
+                            rango = df.iloc[index]['LIMOS'].split('-')
+                            if c['LIMOS'] >= np.float32(rango[0]) and c['LIMOS'] < np.float32(rango[1]):
+                                c['textura'] = df.iloc[index, 3]
+                                c['simboloTextu'] = df.iloc[index, 4]
+
                 print('Para las coordenadas:', 'Latitud: '+ latitude, 'Longitud: ' + longitude, 'los datos son: ', sep='\n' )
                 print(c)
                 return jsonify(c)

@@ -368,9 +368,9 @@ window.jsPDF = window.jspdf.jsPDF
                 const series = textura.map(element => response[element]);
                 const labels = textura.map(element => infodatos[element].nombre)
                 accordionBody.insertAdjacentHTML('beforeend', '<div id="chart-textura"> </div>')
-                chartRadialBar(series, labels, response["textura"])
-              } else if (categoria == "realciones") {
-                const relaciones = infodatos.categorias.realciones
+                chartRadialBar(series, labels, response["simboloTextu"])
+              } else if (categoria == "relaciones") {
+                const relaciones = infodatos.categorias.relaciones
                 const data = relaciones.variables.map(element => response[element]);
                 const categories = relaciones.variables.map(element => infodatos[element].nombre.replace("Relación catiónica ", ""))
                 accordionBody.insertAdjacentHTML('beforeend', '<div id="chart-relaciones"> </div>')

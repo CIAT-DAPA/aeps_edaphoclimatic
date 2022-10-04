@@ -217,7 +217,7 @@
     },
     "textura_suelo":{
       "nombre": "Textura del suelo",
-      "variables": ["textura", "ARCILLAS", "ARENAS", "LIMOS" ],
+      "variables": ["ARCILLAS", "ARENAS", "LIMOS", "textura"],
       "descripcion": ""
     },
     "nutrientes":{
@@ -225,7 +225,7 @@
       "variables": [ "P", "K", "Ca", "Mg", "S", "Fe", "Cu", "Mn", "Zn", "B", "Aluminio", "Na" ],
       "descripcion": ""
     },
-    "realciones":{
+    "relaciones":{
       "nombre": "Relaciones entre elementos nutricionales del suelo",
       "variables": ["Ca_Mg", "Ca_K", "Mg_K", "K_Mg" ],
       "descripcion": ""
