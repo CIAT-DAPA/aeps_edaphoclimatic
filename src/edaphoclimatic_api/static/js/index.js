@@ -305,7 +305,6 @@ window.jsPDF = window.jspdf.jsPDF
                       let num = 1
                       const count = Object.keys(cluster[variable]).length
                       tabla += `<tr><td rowspan="${count}" class="align-middle">${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}</td>`
-                      console.log(`tamaño del arrego ${variable} es :`, count)
                       if (Object.hasOwnProperty.call(cluster, variable)) {
                         const datosVariable = cluster[variable];
                         for (const rango in datosVariable) {
@@ -562,7 +561,6 @@ window.jsPDF = window.jspdf.jsPDF
       doc.text(docWidth - 10, currentHeight, "https://www.facebook.com/BoyacaSeAdaptaC", "right");
 
       currentHeight += pdfConfig.subLineHeight;
-      console.log(currentHeight)
       doc.line(10, currentHeight, docWidth - 10, currentHeight);
 
       //    Informacion
@@ -575,7 +573,6 @@ window.jsPDF = window.jspdf.jsPDF
 
       doc.setFontSize(pdfConfig.headerTextSize);
       doc.text(10, currentHeight, nombreUsuario);
-      console.log(currentHeight)
       currentHeight += pdfConfig.lineHeight;
 
       doc.setFontSize(pdfConfig.fieldTextSize);
@@ -634,10 +631,6 @@ window.jsPDF = window.jspdf.jsPDF
           doc.cell((docWidth / 1.5) , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Porcentajes`);
           currentHeight += pdfConfig.cell;
 
-          console.log('tamaño del documento', docWidth)
-          console.log('fin del primer cuadro', (docWidth / 3) - 10)
-          console.log('fin del segundo', (docWidth / 1.5)- 20)
-          console.log('fin del ultimo', docWidth - 10)
           for (const variable in cluster) {
             if (variable !== 'numCluster') {
 
@@ -651,11 +644,9 @@ window.jsPDF = window.jspdf.jsPDF
               doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell * count, `${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}`);
               if (Object.hasOwnProperty.call(cluster, variable)) {
                 const datosVariable = cluster[variable];
-                console.log(`datos variable ${variable}`, datosVariable)
                 for (const rango in datosVariable) {
                   if (Object.hasOwnProperty.call(datosVariable, rango)) {
                     const porcentaje = datosVariable[rango];
-                    console.log(`porcentaje para el rango ${rango}`, porcentaje)
                     doc.cell((docWidth / 3) + 10 , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , rango);
                     doc.cell((docWidth / 1.5), currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `${porcentaje}`);
                     currentHeight += pdfConfig.cell;
