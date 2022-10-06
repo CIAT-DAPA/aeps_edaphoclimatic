@@ -96,6 +96,18 @@ def get_data():
                                 c['textura'] = df.iloc[index, 3]
                                 c['simboloTextu'] = df.iloc[index, 4]
 
+                fertilidad = c['FERTILIDAD']
+                if fertilidad < 3.6:
+                    c['fertilidad'] = 'Muy baja'
+                elif fertilidad <= 5.1:
+                    c['fertilidad'] = 'Baja'
+                elif fertilidad <= 6.7:
+                    c['fertilidad'] = 'Moderada'
+                elif fertilidad <= 8.3:
+                    c['fertilidad'] = 'Alta'
+                else :
+                    c['fertilidad'] = 'Muy alta'
+
                 print('Para las coordenadas:', 'Latitud: '+ latitude, 'Longitud: ' + longitude, 'los datos son: ', sep='\n' )
                 print(c)
                 return jsonify(c)

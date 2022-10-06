@@ -89,6 +89,12 @@
     "descripcion": "Indice de fertilidad química del suelo (Adaptado a 30 cm, metodologia IGAC)",
     "sigla": ""
   },
+  "fertilidad":{
+    "nombre":"Fertilidad",
+    "unidad": "",
+    "descripcion": "Rango de fertilidad química del suelo, expresada cualitativamente, segun el indice de fertilidad <br> > 8.4: Muy alta <br>8.4 - 6.8: Alta <br> 6.7 - 5.2: Moderada <br> 5.1 - 3.6: Baja <br> < 3.6: Muy baja",
+    "sigla": ""
+  },
   "K":{
     "nombre":"Potasio",
     "unidad": "cmol/kg",
@@ -212,7 +218,7 @@
   "categorias":{
     "fertilidad":{
       "nombre": "Fertilidad del suelo",
-      "variables": ["pH", "F_MO", "C.O.", "CIC", "SB", "CE" , "FERTILIDAD"],
+      "variables": ["pH", "F_MO", "C.O.", "CIC", "SB", "CE" , "FERTILIDAD", "fertilidad"],
       "descripcion": ""
     },
     "textura_suelo":{
