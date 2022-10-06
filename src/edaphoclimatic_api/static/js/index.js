@@ -154,11 +154,12 @@ window.jsPDF = window.jspdf.jsPDF
 
     var overLay = {
       "Municipios": capMunicipios,
-      "Zona de Estudio": capZonaEstudio,
       "Zonas Edafoclimáticas": capCluster,
     }
 
-    var layerControl = L.control.layers(mapasBase, overLay).addTo(map)
+    var mapControl = L.control.layers(mapasBase).addTo(map)
+
+    var layerControl = L.control.layers(overLay, { "Zona de Estudio": capZonaEstudio, }).addTo(map)
 
     // Funciones del mapa
     map.on('click', function (e) {
@@ -174,19 +175,13 @@ window.jsPDF = window.jspdf.jsPDF
       lc.stop()
     });
 
-    map.on('overlayadd', function (eventLayer) {
+    map.on('baselayerchange', function (eventLayer) {
       if (eventLayer.name === 'Municipios') {
         map.addControl(legendMunicipios);
-      } else if (eventLayer.name === 'Zonas Edafoclimáticas'){
-        map.addControl(legendClusters);
-      }
-    })
-
-    map.on('overlayremove', function (eventLayer) {
-      if (eventLayer.name === 'Municipios') {
-        map.removeControl(legendMunicipios);
-      } else if (eventLayer.name === 'Zonas Edafoclimáticas') {
         map.removeControl(legendClusters);
+      } else if (eventLayer.name === 'Zonas Edafoclimáticas') {
+        map.addControl(legendClusters);
+        map.removeControl(legendMunicipios);
       }
     })
 

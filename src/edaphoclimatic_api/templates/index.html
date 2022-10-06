@@ -29,15 +29,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.10/purify.min.js"
     integrity="sha512-Qr/d6af6cN41/GIKiSmrQd4Y19/fo0YvWhD1VND8O+BsfbFBaZI4K7VVPoUZrd8PzMQ3CE71CkMjhrKf1NbhdQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!--     Google Analytics  tag (gtag.js)  -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-FC8BZ4G6BS"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-FC8BZ4G6BS');
-  </script> -->
   <!--     Geojson     -->
   <script src="static/js/municipios_estudio.js"></script>
   <script src="static/js/veredas_municipios_estudio.js"></script>
@@ -120,6 +111,16 @@
 
     .colmVariable {
       width: 40%;
+    }
+
+    .leaflet-top.leaflet-right .leaflet-control-layers:nth-child(1) .leaflet-control-layers-toggle {
+      background-image: url(static/assets/img/mapa.png);
+      background-size: 30px 30px;
+    }
+
+    .imagen-mapas {
+      width: 30px;
+      height: 30px;
     }
 
     @media (max-width: 991.98px) {
@@ -294,10 +295,9 @@
           botón de descargar.
         </p>
         <h5>Mapa</h5>
-        <p>El mapa cuenta con viarios mapas bases al igual que capas de información los cuales puede seleccionar
-          pulsando en el
-          botón
-          <img src="https://unpkg.com/leaflet@1.8.0/dist/images/layers.png" alt="capas">
+        <p>Se cuenta con viarios diseños base para cambiar el estilo del mapa,
+          los cuales puede intercambiar pulsando en el botón
+          <img class="imagen-mapas" src="static/assets/img/mapa.png" alt="capas">
         </p>
         <ul>
           <h6>Mapas base</h6>
@@ -305,11 +305,16 @@
           <li>Street</li>
           <li>Satelital</li>
         </ul>
+        <p>Al igual que con el mapa base tambien se cuenta con diferentes capas de información las cuales puede
+          intercambiar en el boton
+          <img src="https://unpkg.com/leaflet@1.8.0/dist/images/layers.png" alt="capas">
+        </p>
         <ul>
           <h6>Capas de informacion</h6>
           <li>Municipios: delimita los municipios de estudio del proyecto</li>
-          <li>Zona de estudio: delimita la zona donde se realizaron los estudios de suelo y las que cuentan con información</li>
-          <li>Zonas Edafoclimáticas: divide la zona de estudio en zonas mas pequeñas con características similares</li>
+          <li>Zonas Edafoclimáticas: divide la zona de estudio en zonas mas pequeñas con características de suelo y clima similares</li>
+          <li>Zona de estudio: delimita la zona donde se realizaron los estudios de suelo y las que cuentan con
+            información</li>
         </ul>
       </div>
     </div>
