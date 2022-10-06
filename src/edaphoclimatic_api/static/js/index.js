@@ -615,38 +615,43 @@ window.jsPDF = window.jspdf.jsPDF
         const variables = categorias[categoria].variables
         if (categoria == 'zonas') {
           const cluster = datos['cluster']
-          const me = `Usted se encuentra dentro de la zona edafoclimática ${cluster.numCluster}`
-          doc.setFontSize(pdfConfig.fieldTextSize);
-          let lines = doc.splitTextToSize(`Usted se encuentra dentro de la zona edafoclimática ${cluster.numCluster}.`, docWidth - 20);
-          doc.text(lines, 10, currentHeight);
-          currentHeight += pdfConfig.subLineHeight;
-          doc.setFontSize(pdfConfig.headerTextSize);
+          if (cluster.message) {
+            doc.setFontSize(pdfConfig.fieldTextSize);
+            let lines = doc.splitTextToSize(cluster.message, docWidth - 20);
+            doc.text(lines, 10, currentHeight);
+          }else{          
+            doc.setFontSize(pdfConfig.fieldTextSize);
+            let lines = doc.splitTextToSize(`Usted se encuentra dentro de la zona edafoclimática ${cluster.numCluster}.`, docWidth - 20);
+            doc.text(lines, 10, currentHeight);
+            currentHeight += pdfConfig.subLineHeight;
+            doc.setFontSize(pdfConfig.headerTextSize);
 
-          doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell , `Variable`);
-          doc.cell((docWidth / 3) + 10, currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Rangos`);
-          doc.cell((docWidth / 1.5) , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Porcentajes`);
-          currentHeight += pdfConfig.cell;
+            doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell , `Variable`);
+            doc.cell((docWidth / 3) + 10, currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Rangos`);
+            doc.cell((docWidth / 1.5) , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `Porcentajes`);
+            currentHeight += pdfConfig.cell;
 
-          for (const variable in cluster) {
-            if (variable !== 'numCluster') {
+            for (const variable in cluster) {
+              if (variable !== 'numCluster') {
 
-              const count = Object.keys(cluster[variable]).length
-              if (currentHeight + (pdfConfig.cell * count) > docHeight - 35) {
-                doc.addPage()
-                doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
-                doc.line(10, 39, docWidth - 10, 39);
-                currentHeight = 51
-                doc.addImage("/static/assets/img/piedepagina.png", "PNG", 20, docHeight - 35, 180, 35)
-              }
-              doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell * count, `${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}`);
-              if (Object.hasOwnProperty.call(cluster, variable)) {
-                const datosVariable = cluster[variable];
-                for (const rango in datosVariable) {
-                  if (Object.hasOwnProperty.call(datosVariable, rango)) {
-                    const porcentaje = datosVariable[rango];
-                    doc.cell((docWidth / 3) + 10 , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , rango);
-                    doc.cell((docWidth / 1.5), currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `${porcentaje}`);
-                    currentHeight += pdfConfig.cell;
+                const count = Object.keys(cluster[variable]).length
+                if (currentHeight + (pdfConfig.cell * count) > docHeight - 35) {
+                  doc.addPage()
+                  doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
+                  doc.line(10, 39, docWidth - 10, 39);
+                  currentHeight = 51
+                  doc.addImage("/static/assets/img/piedepagina.png", "PNG", 20, docHeight - 35, 180, 35)
+                }
+                doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell * count, `${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}`);
+                if (Object.hasOwnProperty.call(cluster, variable)) {
+                  const datosVariable = cluster[variable];
+                  for (const rango in datosVariable) {
+                    if (Object.hasOwnProperty.call(datosVariable, rango)) {
+                      const porcentaje = datosVariable[rango];
+                      doc.cell((docWidth / 3) + 10 , currentHeight, (docWidth / 3) - 10, pdfConfig.cell , rango);
+                      doc.cell((docWidth / 1.5), currentHeight, (docWidth / 3) - 10, pdfConfig.cell , `${porcentaje}`);
+                      currentHeight += pdfConfig.cell;
+                    }
                   }
                 }
               }
