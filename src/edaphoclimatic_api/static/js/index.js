@@ -541,7 +541,7 @@ window.jsPDF = window.jspdf.jsPDF
       //      Encabezado
 
       doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
-
+      doc.addImage("/static/assets/img/piedepagina.png", "PNG", 20, docHeight - 35, 180, 35)
       currentHeight += pdfConfig.subLineHeight;
       currentHeight += pdfConfig.subLineHeight;
       doc.setFontSize(pdfConfig.fieldTextSize);
@@ -598,11 +598,12 @@ window.jsPDF = window.jspdf.jsPDF
       const categorias = infodatos.categorias;
       for (const categoria in categorias) {
 
-        if (currentHeight + 35 > docHeight - 20 || categoria == 'zonas') {
+        if (currentHeight + 35 > docHeight - 35 || categoria == 'zonas') {
           doc.addPage()
           doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
           doc.line(10, 39, docWidth - 10, 39);
           currentHeight = 51
+          doc.addImage("/static/assets/img/piedepagina.png", "PNG", 20, docHeight - 35, 180, 35)
         }
 
         doc.setFontSize(pdfConfig.headerTextSize);
@@ -630,11 +631,12 @@ window.jsPDF = window.jspdf.jsPDF
             if (variable !== 'numCluster') {
 
               const count = Object.keys(cluster[variable]).length
-              if (currentHeight + (pdfConfig.cell * count) > docHeight - 20) {
+              if (currentHeight + (pdfConfig.cell * count) > docHeight - 35) {
                 doc.addPage()
                 doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
                 doc.line(10, 39, docWidth - 10, 39);
                 currentHeight = 51
+                doc.addImage("/static/assets/img/piedepagina.png", "PNG", 20, docHeight - 35, 180, 35)
               }
               doc.cell(10, currentHeight, (docWidth / 3) , pdfConfig.cell * count, `${infodatos[variable].nombre} ${infodatos[variable].unidad && '(' + infodatos[variable].unidad + ')'}`);
               if (Object.hasOwnProperty.call(cluster, variable)) {
@@ -653,11 +655,12 @@ window.jsPDF = window.jspdf.jsPDF
         } else {
           for (let index = 0; index < variables.length; index += 2) {
 
-            if (currentHeight + 30 > docHeight - 20) {
+            if (currentHeight + 30 > docHeight - 35) {
               doc.addPage()
               doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30)
               doc.line(10, 39, docWidth - 10, 39);
               currentHeight = 51
+              doc.addImage("/static/assets/img/piedepagina.png", "PNG", 20, docHeight - 35, 180, 35)
             }
             const key = variables[index];
             const key2 = variables[index + 1]
