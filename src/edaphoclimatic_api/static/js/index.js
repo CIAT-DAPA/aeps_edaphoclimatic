@@ -875,7 +875,7 @@ function render() {
                   ${categorias[categoria].nombre}
                   </button>
                 </h3>
-                <div id="collapse${categoria}" class="accordion-collapse collapse show" aria-labelledby="heading${categoria}" data-bs-parent="#accordion${categoria}">
+                <div id="collapse${categoria}" class="accordion-collapse collapse" aria-labelledby="heading${categoria}" data-bs-parent="#accordion${categoria}">
                   <div class="accordion-body" id="accordion-body-${categoria}">`
         );
 
