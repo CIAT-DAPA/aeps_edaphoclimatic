@@ -212,8 +212,8 @@ var capZonaEstudio = L.geoJSON(zonaEstudio, {
 });
 
 var overLay = {
-  Municipios: capMunicipios,
-  "Zonas Edafoclimáticas": capCluster,
+  'Ubicación específica': capMunicipios,
+  "Zona Edafoclimática": capCluster,
 };
 
 var mapControl = L.control.layers(mapasBase).addTo(map);
@@ -237,10 +237,10 @@ map.on("locationfound", function (e) {
 });
 
 map.on("baselayerchange", function (eventLayer) {
-  if (eventLayer.name === "Municipios") {
+  if (eventLayer.name === "Ubicación específica") {
     map.addControl(legendMunicipios);
     map.removeControl(legendClusters);
-  } else if (eventLayer.name === "Zonas Edafoclimáticas") {
+  } else if (eventLayer.name === "Zona Edafoclimática") {
     map.addControl(legendClusters);
     map.removeControl(legendMunicipios);
   }
