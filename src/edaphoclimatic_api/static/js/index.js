@@ -206,7 +206,7 @@ var capZonaEstudio = L.geoJSON(zonaEstudio, {
   style: function (feature) {
     return {
       color: "#000000",
-      weight: 1,
+      weight: 2,
     };
   },
 });
