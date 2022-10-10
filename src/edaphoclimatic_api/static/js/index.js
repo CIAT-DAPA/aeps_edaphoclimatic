@@ -339,7 +339,6 @@ function consulta() {
           "background-color: rgb(27 243 69 / 85%);"
         );
         spinner.setAttribute("style", "display: none;");
-        btnSave.style.removeProperty("display");
         toast.show();
       }
     },
@@ -485,6 +484,7 @@ function pdf() {
   const longitud = document.getElementById("longitud").value;
   const latitud = document.getElementById("latitud").value;
   const nombreUsuario = document.getElementById("nombreUsuario").value;
+  const categorias = infodatos.categorias;
 
   var doc = new jsPDF({
     orientation: "p",
@@ -577,58 +577,14 @@ function pdf() {
 
   //   Mensaje de introduccion
 
-  doc.setFontSize(pdfConfig.headerTextSize);
-  doc.text(
-    docWidth / 2,
-    currentHeight,
-    "Perfil de fertilidad de suelos, basado en Big Data",
-    "center"
-  );
-  currentHeight += pdfConfig.subLineHeight;
-  currentHeight += pdfConfig.subLineHeight;
-
-  doc.setFontSize(pdfConfig.fieldTextSize);
-  let lines = doc.splitTextToSize(
-    "Este resultado es una aproximación a las características de sus suelos, basado en análisis de información, a partir de una malla rígida, capturada por los profesionales del proyecto. No reemplaza un análisis de suelo convencional, pero le servirá de guía para la toma de decisiones.",
-    docWidth - 20
-  );
-  doc.text(lines, 10, currentHeight);
-
-  //   Datos
-
-  currentHeight += pdfConfig.subLineHeight * 4;
-
-  const categorias = infodatos.categorias;
-  for (const categoria in categorias) {
-    if (currentHeight + 35 > docHeight - 35 || categoria == "zonas") {
-      doc.addPage();
-      doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30);
-      doc.line(10, 39, docWidth - 10, 39);
-      currentHeight = 51;
-      doc.addImage(
-        "/static/assets/img/piedepagina.png",
-        "PNG",
-        20,
-        docHeight - 35,
-        180,
-        35
-      );
-    }
-
+  if ( map.hasLayer(capCluster) ) {
+    const categoria = "zonas";
     doc.setFontSize(pdfConfig.headerTextSize);
-    doc.text(
-      docWidth / 2,
-      currentHeight,
-      categorias[categoria].nombre,
-      "center"
-    );
+    doc.text( docWidth / 2, currentHeight, categorias[categoria].nombre, "center");
 
     currentHeight += pdfConfig.subLineHeight;
     currentHeight += pdfConfig.subLineHeight;
-
-    const variables = categorias[categoria].variables;
-    if (categoria == "zonas") {
-      const cluster = datos["cluster"];
+    const cluster = datos["cluster"];
       if (cluster.message) {
         doc.setFontSize(pdfConfig.fieldTextSize);
         let lines = doc.splitTextToSize(cluster.message, docWidth - 20);
@@ -720,9 +676,31 @@ function pdf() {
           }
         }
       }
-    } else {
-      for (let index = 0; index < variables.length; index += 2) {
-        if (currentHeight + 30 > docHeight - 35) {
+  }else {
+    doc.setFontSize(pdfConfig.headerTextSize);
+    doc.text(
+      docWidth / 2,
+      currentHeight,
+      "Perfil de fertilidad de suelos, basado en Big Data",
+      "center"
+    );
+    currentHeight += pdfConfig.subLineHeight;
+    currentHeight += pdfConfig.subLineHeight;
+
+    doc.setFontSize(pdfConfig.fieldTextSize);
+    let lines = doc.splitTextToSize(
+      "Este resultado es una aproximación a las características de sus suelos, basado en análisis de información, a partir de una malla rígida, capturada por los profesionales del proyecto. No reemplaza un análisis de suelo convencional, pero le servirá de guía para la toma de decisiones.",
+      docWidth - 20
+    );
+    doc.text(lines, 10, currentHeight);
+
+    //   Datos
+
+    currentHeight += pdfConfig.subLineHeight * 4;
+
+    for (const categoria in categorias) { 
+      if (categoria !== "zonas") {
+        if (currentHeight + 35 > docHeight - 35 ) {
           doc.addPage();
           doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30);
           doc.line(10, 39, docWidth - 10, 39);
@@ -736,57 +714,87 @@ function pdf() {
             35
           );
         }
-        const key = variables[index];
-        const key2 = variables[index + 1];
 
-        const element = datos[key];
-        const nombre = infodatos[key].nombre;
-        const unidad = infodatos[key].unidad;
-        const sigla = infodatos[key].sigla;
-        const element2 = key2 ? datos[key2] : "";
-        const nombre2 = key2 ? infodatos[key2].nombre : "";
-        const unidad2 = key2 ? infodatos[key2].unidad : "";
-        const sigla2 = key2 ? infodatos[key2].sigla : "";
-
-        doc.cell(
-          10,
-          currentHeight,
-          docWidth / 2 - 10,
-          pdfConfig.cell,
-          `${nombre}${sigla && " - " + sigla}${unidad && " (" + unidad + ")"}`
-        );
-        doc.cell(
+        doc.setFontSize(pdfConfig.headerTextSize);
+        doc.text(
           docWidth / 2,
           currentHeight,
-          docWidth / 2 - 10,
-          pdfConfig.cell,
-          `${nombre2}${sigla2 && " - " + sigla2}${
-            unidad2 && " (" + unidad2 + ")"
-          }`
-        );
-        currentHeight += pdfConfig.cell;
-
-        doc.cell(
-          10,
-          currentHeight,
-          docWidth / 2 - 10,
-          pdfConfig.cell,
-          `${element}`
-        );
-        doc.cell(
-          docWidth / 2,
-          currentHeight,
-          docWidth / 2 - 10,
-          pdfConfig.cell,
-          `${element2}`
+          categorias[categoria].nombre,
+          "center"
         );
 
-        currentHeight += pdfConfig.cell;
+        currentHeight += pdfConfig.subLineHeight;
+        currentHeight += pdfConfig.subLineHeight;
+
+        const variables = categorias[categoria].variables;
+      
+          for (let index = 0; index < variables.length; index += 2) {
+            if (currentHeight + 30 > docHeight - 35) {
+              doc.addPage();
+              doc.addImage("/static/assets/img/logo.png", "PNG", 10, 10, 100, 30);
+              doc.line(10, 39, docWidth - 10, 39);
+              currentHeight = 51;
+              doc.addImage(
+                "/static/assets/img/piedepagina.png",
+                "PNG",
+                20,
+                docHeight - 35,
+                180,
+                35
+              );
+            }
+            const key = variables[index];
+            const key2 = variables[index + 1];
+
+            const element = datos[key];
+            const nombre = infodatos[key].nombre;
+            const unidad = infodatos[key].unidad;
+            const sigla = infodatos[key].sigla;
+            const element2 = key2 ? datos[key2] : "";
+            const nombre2 = key2 ? infodatos[key2].nombre : "";
+            const unidad2 = key2 ? infodatos[key2].unidad : "";
+            const sigla2 = key2 ? infodatos[key2].sigla : "";
+
+            doc.cell(
+              10,
+              currentHeight,
+              docWidth / 2 - 10,
+              pdfConfig.cell,
+              `${nombre}${sigla && " - " + sigla}${unidad && " (" + unidad + ")"}`
+            );
+            doc.cell(
+              docWidth / 2,
+              currentHeight,
+              docWidth / 2 - 10,
+              pdfConfig.cell,
+              `${nombre2}${sigla2 && " - " + sigla2}${
+                unidad2 && " (" + unidad2 + ")"
+              }`
+            );
+            currentHeight += pdfConfig.cell;
+
+            doc.cell(
+              10,
+              currentHeight,
+              docWidth / 2 - 10,
+              pdfConfig.cell,
+              `${element}`
+            );
+            doc.cell(
+              docWidth / 2,
+              currentHeight,
+              docWidth / 2 - 10,
+              pdfConfig.cell,
+              `${element2}`
+            );
+
+            currentHeight += pdfConfig.cell;
+          }
+
+        currentHeight += pdfConfig.subLineHeight;
+        currentHeight += pdfConfig.subLineHeight;
       }
     }
-
-    currentHeight += pdfConfig.subLineHeight;
-    currentHeight += pdfConfig.subLineHeight;
   }
   doc.save(`suelo-${nombreUsuario}`);
 }
@@ -819,6 +827,7 @@ function render() {
         "beforeend",
         `<p class=" bg-light p-4 border rounded">${datos["cluster"].message}</p>`
       );
+      btnSave.setAttribute("style", "display: none;");
     } else {
       const cluster = datos["cluster"];
       let tabla = "";
@@ -865,6 +874,7 @@ function render() {
       );
     }
   } else {
+    btnSave.style.removeProperty("display");
     for (const categoria in categorias) {
       if (categoria !== "zonas") {
         containerDatos.insertAdjacentHTML(
