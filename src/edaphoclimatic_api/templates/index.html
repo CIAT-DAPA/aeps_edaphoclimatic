@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="icon" type="image/x-icon" href="/static/assets/img/favicon.ico">
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -253,37 +254,41 @@
       </div>
       <div class="offcanvas-body" id="info">
         <img src="static/assets/img/logo.png" class="img-fluid" alt="logo-Boyaca-se-adapta" id="logo">
-        <p>Gracias al proyecto Boyacá se adapta al cambio climático y con el acompañamiento de la alianza Bioversity
-          CIAT se realizan actividades relacionadas con la captura y análisis de datos que, posteriormente se presentan
-          a través de sistemas de visualización dinámicos y actualizables con el fin de transformar fortalecer la toma
-          de decisiones tanto de técnicos como de productores en sus fincas.</p>
-
+        <p>Gracias al proyecto “<strong>Boyacá se Adapta al Cambio Climático</strong>”, y con el acompañamiento de la 
+          Alianza Bioversity CIAT, se realizó: 1). captura de datos de clima y suelo, 2). análisis de datos 
+          con herramientas de Big Data, con las cuales se generaron 10 zonas edafoclimáticas y 
+          3). Visualización dinámica actualizable de las zonas edafoclimáticas, además de permitir consultar 
+          datos de química y física de suelos de un punto en particular dentro de la zona de 
+          estudio del proyecto. Esperamos que esta información sirva de base para la toma de decisiones s
+          obre el manejo de los cultivos y gestión de políticas de desarrollo, por parte de productores, 
+          profesionales e instituciones.</p>
         <h5>Consulta de datos</h5>
         <p>Para realizar la consulta de los datos tiene varias opciones:</p>
         <ul>
           <li>
-            Ingresar la latitud y longitud de su lote en la barra superior y después presionar el botón
-            Consultar. Recuerde que las coordenadas deben estar en formato <strong>Grados decimales</strong>.
+            Ingresar las coordenadas (latitud y longitud) de un punto en su finca en la barra superior y después 
+            presionar el botón Consultar. Recuerde que las coordenadas deben estar en formato <strong>Grados decimales</strong>.
           </li>
           <li>
-            Buscar y seleccionar la ubicación en el mapa, el sistema tomara automáticamente las coordenadas y
-            realizara la consulta de los datos.
+            Seleccionar la capa de información “Satélite”, esta capa activará una vista aérea que le permitirá 
+            identificar con mayor claridad su finca, puede incluso hacer zoom sobre la imagen y seleccionar 
+            la ubicación de interés, el sistema identificará automáticamente las coordenadas y mostrará la 
+            información de ese punto.
           </li>
           <li>
-            En dispositivos con GPS se cuanta con la opción de buscar la ubicación por medio de este. Para esto
-            debe presionar el botón
+            En dispositivos móviles se cuenta con la opción de buscar la ubicación automáticamente activando el GPS, 
+            Para esto debe presionar el botón 
             <img class="ejemploBuscar"
               src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/location-arrow-solid.svg"
               alt="flecha-busqueda">
-            ubicado en el mapa. El sistema solicitara permisos para utilizar el GPS del dispositivo los cuales debe
-            aceptar, de esta forma el sistema tomara las coordenadas de su ubicación actual y realiza la consulta
-            de los datos.
+            ubicado en el mapa. El sistema solicitará permiso para utilizar el GPS del dispositivo, 
+            el cual debe aceptar, de esta forma el sistema tomará las coordenadas de su ubicación actual y 
+            realizará la consulta de los datos.
           </li>
         </ul>
         <H5>Descarga de datos</H5>
-        <p>Después de realizar la consulta de los datos el sistema le permite descargarlos en formato
-          <strong>PDF</strong>
-          para lo cual debe pulsar el botón
+        <p>Después de realizar la consulta de los datos, usted podrá descargar un reporte en formato 
+          <strong>PDF</strong> para lo cual debe pulsar el botón 
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-box-arrow-down" viewBox="0 0 16 16">
             <path fill-rule="evenodd"
@@ -291,13 +296,14 @@
             <path fill-rule="evenodd"
               d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z" />
           </svg>
-          que se encuentra en la esquina inferior derecha de la pantalla, debe ingresar su nombre y pulsar en el
-          botón de descargar.
+          que se encuentra en la esquina inferior derecha de la pantalla, saldrá una ventana en la que deberá 
+          ingresar su nombre, y posteriormente deberá pulsar el botón de descarga.
         </p>
         <h5>Mapa</h5>
-        <p>Se cuenta con viarios diseños base para cambiar el estilo del mapa,
-          los cuales puede intercambiar pulsando en el botón
+        <p>El visualizador cuenta con tres tipos de mapa base, usted podrá cambiar entre ellos para 
+          identificar más fácilmente la zona de interés, encuentre el botón 
           <img class="imagen-mapas" src="static/assets/img/mapa.png" alt="capas">
+          para esto, en la esquina superior derecha.
         </p>
         <ul>
           <h6>Mapas base</h6>
@@ -305,17 +311,17 @@
           <li>Street</li>
           <li>Satelital</li>
         </ul>
-        <p>Al igual que con el mapa base tambien se cuenta con diferentes capas de información las cuales puede
-          intercambiar en el boton
+        <h6>Capas de informacion</h6>
+        <p>Adicional a los tres tipos de mapa, el visualizador cuenta con dos capas de información: 
+          1). Información de un punto específico dentro de los municipios y de la zona de estudio, del proyecto y 
+          2). Información de las zonas edafoclimáticas generadas, las cuales agrupan áreas con características similares de clima y suelo. 
+          Tenga en cuenta que usted podrá activar o desactivar la capa de delimitación de la zona de estudio del proyecto. <br><br>
+          Si selecciona un punto por fuera de la zona de estudio el visualizador no podrá mostrar información. 
+          Para cambiar entre estas capas, seleccione el botón 
           <img src="https://unpkg.com/leaflet@1.8.0/dist/images/layers.png" alt="capas">
+          que se encuentra en la esquina superior derecha debajo del tipo de mapa. 
         </p>
-        <ul>
-          <h6>Capas de informacion</h6>
-          <li>Municipios: delimita los municipios de estudio del proyecto</li>
-          <li>Zonas Edafoclimáticas: divide la zona de estudio en zonas mas pequeñas con características de suelo y clima similares</li>
-          <li>Zona de estudio: delimita la zona donde se realizaron los estudios de suelo y las que cuentan con
-            información</li>
-        </ul>
+        <img src="static/assets/img/piedepagina.png" class="img-fluid" alt="logo-Boyaca-se-adapta" id="logo">
       </div>
     </div>
   </div>
