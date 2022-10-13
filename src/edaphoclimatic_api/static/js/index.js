@@ -881,7 +881,7 @@ function render() {
           "beforeend",
           `<div class="accordion-item">
                 <h3 class="accordion-header" id="heading${categoria}">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${categoria}" aria-expanded="true" aria-controls="collapse${categoria}" style="font-size: 1.5rem;">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${categoria}" aria-expanded="false" aria-controls="collapse${categoria}" style="font-size: 1.5rem;">
                   ${categorias[categoria].nombre}
                   </button>
                 </h3>
