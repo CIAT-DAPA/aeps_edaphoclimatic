@@ -829,6 +829,7 @@ function render() {
       );
       btnSave.setAttribute("style", "display: none;");
     } else {
+      btnSave.style.removeProperty("display");
       const cluster = datos["cluster"];
       let tabla = "";
       for (const variable in cluster) {
